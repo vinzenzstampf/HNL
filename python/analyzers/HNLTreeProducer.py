@@ -30,9 +30,6 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookDisplacedMuon (self.tree,'dMu1MaxDr0a12')
         self.bookDisplacedMuon (self.tree,'dMu2MaxDr0a12')
 
-
-
-
         # output for mc analysis
         # the W->lN, N->llnu candidate
         self.bookHNL(self.tree, 'hnl')
@@ -67,6 +64,8 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookParticle (self.tree, 'l1_bestmatch'           )
         self.var(self.tree, 'l1_bestmatchtype')
         self.var(self.tree, 'l1_bestmatchdR')
+        # dr between reco's
+        self.var(self.tree, 'dr_recos_l1')
 
         self.bookParticle(self.tree, 'l2')
         self.bookEle      (self.tree, 'l2_matched_electron'    )
@@ -81,6 +80,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookParticle (self.tree, 'l2_bestmatch'           )
         self.var(self.tree, 'l2_bestmatchtype')
         self.var(self.tree, 'l2_bestmatchdR')
+        # dr between reco's
+        self.var(self.tree, 'dr_recos_l2')
+
 
         # final neutrino
         self.bookGenParticle(self.tree, 'n')
@@ -171,6 +173,7 @@ class HNLTreeProducer(TreeProducerBase):
         if event.the_hnl.l1().bestmatch != None: self.fillParticle(self.tree, 'l1_bestmatch'       , event.the_hnl.l1().bestmatch   )
         self.fill(self.tree, 'l1_bestmatchtype',event.the_hnl.l1().bestmatchtype)
         if hasattr(event.the_hnl.l1(), 'bestmatchdR'  ): self.fill       (self.tree, 'l1_bestmatchdR'     ,event.the_hnl.l1().bestmatchdR)
+        if hasattr(event.the_hnl.l1(), 'bestmuon') and hasattr(event.the_hnl.l1(), 'bestdsmuon'): self.fill(self.tree, 'dr_recos_l1', event.the_hnl.l1().dr_recos_l1)
 
         self.fillParticle(self.tree, 'l2', event.the_hnl.l2())
         if hasattr(event.the_hnl.l2(), 'bestelectron'): self.fillEle     (self.tree, 'l2_matched_electron', event.the_hnl.l2().bestelectron)
@@ -182,6 +185,7 @@ class HNLTreeProducer(TreeProducerBase):
         if event.the_hnl.l2().bestmatch != None: self.fillParticle(self.tree, 'l2_bestmatch'       , event.the_hnl.l2().bestmatch   )
         self.fill(self.tree, 'l2_bestmatchtype',event.the_hnl.l2().bestmatchtype)
         if hasattr(event.the_hnl.l2(), 'bestmatchdR'  ): self.fill       (self.tree, 'l2_bestmatchdR'     ,event.the_hnl.l2().bestmatchdR)
+        if hasattr(event.the_hnl.l2(), 'bestmuon') and hasattr(event.the_hnl.l2(), 'bestdsmuon'): self.fill(self.tree, 'dr_recos_l2', event.the_hnl.l2().dr_recos_l2)
 
                 
 

@@ -90,6 +90,21 @@ class HNLAnalyzer(Analyzer):
         # store the number of sMu and dSAMu per event
         event.n_sMu = len(event.sMu)
         event.n_dSAMu = len(event.dSAMu)
+        
+        #####################################################################################
+        # check dr distribution of the two reco's for corr. gen mu (in terms of eta and pt)
+        #####################################################################################
+        
+        # PSEUDO CODE
+        # if l1 xor l2 has both matched mu
+        # store dr between reco's
+        if not (event.the_hnl.l1().bestmuon and event.the_hnl.l1().bestdsmuon \
+                and not (event.the_hnl.l2().bestmuon or event.the_hnl.l2().bestdsmuon) ): 
+            event.dr_recos_l1 = deltaR(event.the_hnl.l1().bestmuon,event.the_hnl.l1().bestdsmuon)
+
+        if not (event.the_hnl.l2().bestmuon and event.the_hnl.l2().bestdsmuon \
+                and not (event.the_hnl.l1().bestmuon or event.the_hnl.l1().bestdsmuon) ): 
+            event.dr_recos_l2 = deltaR(event.the_hnl.l2().bestmuon,event.the_hnl.l2().bestdsmuon)
        
         #####################################################################################
         # MUCO, the MUon COncatenator
