@@ -108,6 +108,11 @@ class RecoGenAnalyzer(Analyzer):
         #define the dr to cut on
         dr_cut = 0.1
 
+        event.the_hnl.l1().bestmuon      = None
+        event.the_hnl.l1().bestdsmuon    = None
+        event.the_hnl.l2().bestmuon      = None
+        event.the_hnl.l2().bestdsmuon    = None
+
         # match gen to reco
         for ip in [event.the_hnl.l0(), 
                    event.the_hnl.l1(), 
@@ -167,6 +172,7 @@ class RecoGenAnalyzer(Analyzer):
                 ip.bestmatch = ip.matches[0]
                 ip.bestmatchdR = deltaR(ip,ip.bestmatch)
                 # remove already matched particles, avoid multiple matches to the same candidate while recording the type of reconstruction
+#                set_trace()
                 matchable.remove(ip.bestmatch)
 
                 # record which is which

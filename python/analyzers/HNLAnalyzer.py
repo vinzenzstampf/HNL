@@ -98,13 +98,26 @@ class HNLAnalyzer(Analyzer):
         # PSEUDO CODE
         # if l1 xor l2 has both matched mu
         # store dr between reco's
-        if not (event.the_hnl.l1().bestmuon and event.the_hnl.l1().bestdsmuon \
-                and not (event.the_hnl.l2().bestmuon or event.the_hnl.l2().bestdsmuon) ): 
-            event.dr_recos_l1 = deltaR(event.the_hnl.l1().bestmuon,event.the_hnl.l1().bestdsmuon)
+        event.the_hnl.l1().dr_recos_l1 = -99
+        event.the_hnl.l1().deta_recos_l1 = -99
+        event.the_hnl.l1().dphi_recos_l1 = -99
+        event.the_hnl.l2().dr_recos_l2 = -99
+        event.the_hnl.l2().deta_recos_l2 = -99
+        event.the_hnl.l2().dphi_recos_l2 = -99
 
-        if not (event.the_hnl.l2().bestmuon and event.the_hnl.l2().bestdsmuon \
-                and not (event.the_hnl.l1().bestmuon or event.the_hnl.l1().bestdsmuon) ): 
-            event.dr_recos_l2 = deltaR(event.the_hnl.l2().bestmuon,event.the_hnl.l2().bestdsmuon)
+        if not event.the_hnl.l1().bestmuon is None and not event.the_hnl.l1().bestdsmuon is None:#\
+#                and (event.the_hnl.l2().bestmuon is None or event.the_hnl.l2().bestdsmuon is None) ): 
+#            set_trace()
+            event.the_hnl.l1().dr_recos_l1 = deltaR(event.the_hnl.l1().bestmuon,event.the_hnl.l1().bestdsmuon)
+            event.the_hnl.l1().deta_recos_l1 = event.the_hnl.l1().bestmuon.eta()-event.the_hnl.l1().bestdsmuon.eta()
+            event.the_hnl.l1().dphi_recos_l1 = deltaPhi(event.the_hnl.l1().bestmuon.phi(),event.the_hnl.l1().bestdsmuon.phi())
+
+        if not event.the_hnl.l2().bestmuon is None and not event.the_hnl.l2().bestdsmuon is None:# \
+#                and (event.the_hnl.l1().bestmuon is None or event.the_hnl.l1().bestdsmuon is None) ): 
+#            set_trace()
+            event.the_hnl.l2().dr_recos_l2 = deltaR(event.the_hnl.l2().bestmuon,event.the_hnl.l2().bestdsmuon)
+            event.the_hnl.l2().deta_recos_l2 = event.the_hnl.l2().bestmuon.eta()-event.the_hnl.l2().bestdsmuon.eta()
+            event.the_hnl.l2().dphi_recos_l2 = deltaPhi(event.the_hnl.l2().bestmuon.phi(),event.the_hnl.l2().bestdsmuon.phi())
        
         #####################################################################################
         # MUCO, the MUon COncatenator
@@ -206,8 +219,8 @@ class HNLAnalyzer(Analyzer):
             ########################################################################################
             # select only dimuon pairs with mutual vertices (surviving the kinematic vertex fitter)
             ########################################################################################
-            if abs(event.the_hnl.l1().pt()-18.4)<0.1:
-                set_trace()
+#            if abs(event.the_hnl.l1().pt()-18.4)<0.1:
+#                set_trace()
             dimuons = []
             for pair in event.pairs:
                 sv = None
