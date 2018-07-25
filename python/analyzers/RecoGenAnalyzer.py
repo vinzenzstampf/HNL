@@ -162,7 +162,7 @@ class RecoGenAnalyzer(Analyzer):
                 match, dr2 = bestMatch(ip,event.dgmuons)
                 if dr2 < dr_cut * dr_cut: 
                     ip.bestdgmuon = match
-            
+ 
             # to find the best match, give precedence to any matched 
             # particle in the matching cone with the correct PDG ID
             # then to the one which is closest
@@ -185,7 +185,28 @@ class RecoGenAnalyzer(Analyzer):
 
             else:
                 ip.bestmatchtype = -1 
-    
+
+        # CHECK DR OF BEST MUON MATCH
+        for lep in [event.the_hnl.l1(),event.the_hnl.l2()]:
+
+            lep.dsmatches = []
+            if len(event.dsmuons):
+                for dsmu in event.dsmuons:
+                    if abs( (dsmu.pt() - lep.pt())/lep.pt() ) < 0.3: lep.dsmatches.append(dsmu)
+                lep.dsmatches.sort(key = lambda x : ( abs( (lep.pt() - x.pt())/lep.pt() ), x.charge()==lep.charge() ), reverse = False)
+                if len(lep.dsmatches):
+                    lep.dsmatchdr = deltaR(lep.dsmatches[0],lep)
+
+            lep.smatches = []
+            if len(event.muons):
+                for smu in event.muons:
+                    if abs( (smu.pt() - lep.pt())/lep.pt() ) < 0.3: lep.smatches.append(smu)
+                lep.smatches.sort(key = lambda x : ( abs( (lep.pt() - x.pt())/lep.pt() ), x.charge()==lep.charge() ), reverse = False)
+                if len(lep.smatches):
+                    lep.smatchdr = deltaR(lep.smatches[0],lep)
+
+#        if len(event.the_hnl.l1().dsmatches+event.the_hnl.l1().smatches) > 3 or len(event.the_hnl.l2().dsmatches+event.the_hnl.l2().smatches) > 3: set_trace()
+
         # clear it before doing it again
         event.recoSv = None
 

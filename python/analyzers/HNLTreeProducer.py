@@ -68,6 +68,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.var(self.tree, 'dr_recos_l1')
         self.var(self.tree, 'deta_recos_l1')
         self.var(self.tree, 'dphi_recos_l1')
+        # check dr dist of 'best' reco 
+        self.var(self.tree, 'l1_smatch_dr')
+        self.var(self.tree, 'l1_dsmatch_dr')
 
         self.bookParticle(self.tree, 'l2')
         self.bookEle      (self.tree, 'l2_matched_electron'    )
@@ -86,6 +89,9 @@ class HNLTreeProducer(TreeProducerBase):
         self.var(self.tree, 'dr_recos_l2')
         self.var(self.tree, 'deta_recos_l2')
         self.var(self.tree, 'dphi_recos_l2')
+        # check dr dist of 'best' reco 
+        self.var(self.tree, 'l2_smatch_dr')
+        self.var(self.tree, 'l2_dsmatch_dr')
 
 
         # final neutrino
@@ -180,6 +186,8 @@ class HNLTreeProducer(TreeProducerBase):
         if hasattr(event.the_hnl.l1(), 'bestmuon') and hasattr(event.the_hnl.l1(), 'bestdsmuon'): self.fill(self.tree, 'dr_recos_l1', event.the_hnl.l1().dr_recos_l1)
         if hasattr(event.the_hnl.l1(), 'bestmuon') and hasattr(event.the_hnl.l1(), 'bestdsmuon'): self.fill(self.tree, 'deta_recos_l1', event.the_hnl.l1().deta_recos_l1)
         if hasattr(event.the_hnl.l1(), 'bestmuon') and hasattr(event.the_hnl.l1(), 'bestdsmuon'): self.fill(self.tree, 'dphi_recos_l1', event.the_hnl.l1().dphi_recos_l1)
+        if hasattr(event.the_hnl.l1(), 'smatchdr'): self.fill(self.tree, 'l1_smatch_dr', event.the_hnl.l1().smatchdr)        
+        if hasattr(event.the_hnl.l1(), 'dsmatchdr'): self.fill(self.tree, 'l1_dsmatch_dr', event.the_hnl.l1().dsmatchdr)        
 
         self.fillParticle(self.tree, 'l2', event.the_hnl.l2())
         if hasattr(event.the_hnl.l2(), 'bestelectron'): self.fillEle     (self.tree, 'l2_matched_electron', event.the_hnl.l2().bestelectron)
@@ -194,7 +202,8 @@ class HNLTreeProducer(TreeProducerBase):
         if hasattr(event.the_hnl.l2(), 'bestmuon') and hasattr(event.the_hnl.l2(), 'bestdsmuon'): self.fill(self.tree, 'dr_recos_l2', event.the_hnl.l2().dr_recos_l2)
         if hasattr(event.the_hnl.l2(), 'bestmuon') and hasattr(event.the_hnl.l2(), 'bestdsmuon'): self.fill(self.tree, 'deta_recos_l2', event.the_hnl.l2().deta_recos_l2)
         if hasattr(event.the_hnl.l2(), 'bestmuon') and hasattr(event.the_hnl.l2(), 'bestdsmuon'): self.fill(self.tree, 'dphi_recos_l2', event.the_hnl.l2().dphi_recos_l2)
-                
+        if hasattr(event.the_hnl.l2(), 'smatchdr'): self.fill(self.tree, 'l2_smatch_dr', event.the_hnl.l2().smatchdr)        
+        if hasattr(event.the_hnl.l2(), 'dsmatchdr'): self.fill(self.tree, 'l2_dsmatch_dr', event.the_hnl.l2().dsmatchdr)        
 
         # final neutrino
         self.fillGenParticle(self.tree, 'n'  , event.the_hnl.met())
