@@ -15,6 +15,9 @@ from PhysicsTools.Heppy.analyzers.core.PileUpAnalyzer    import PileUpAnalyzer
 from PhysicsTools.Heppy.analyzers.gen.GeneratorAnalyzer  import GeneratorAnalyzer
 from PhysicsTools.Heppy.analyzers.gen.LHEWeightAnalyzer  import LHEWeightAnalyzer
 
+from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
+
+
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer          import HNLAnalyzer
 # from CMGTools.HNL.analyzers.HNLTreeProducer      import HNLTreeProducer
@@ -51,10 +54,15 @@ pick_events        = getHeppyOption('pick_events', False)
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
-samples = [HN3L_M_2p5_V_0p00707106781187_e_onshell, HN3L_M_2p5_V_0p0173205080757_e_onshell]
+samples = [HN3L_M_2p5_V_0p0173205080757_e_onshell]
 
 for sample in samples:
-    sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
+    sample.triggers  = ['HLT_Ele27_WPTight_Gsf_v%d'          %i for i in range(1, 15)]
+    sample.triggers += ['HLT_Ele32_WPTight_Gsf_v%d'          %i for i in range(4, 5)]
+    sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(4, 5)]
+    sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4, 5)]
+    sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(4, 5)]
+#    sample.triggers = ['HLT_IsoMu24_v%d' %i for i in range(4, 5)]
 
     sample.splitFactor = splitFactor(sample, 6e3)
     sample.puFileData = puFileData
@@ -113,13 +121,13 @@ skimAna = cfg.Analyzer(
     name='SkimAnalyzerCount'
 )
 
-# triggerAna = cfg.Analyzer(
-    # TriggerAnalyzer,
-    # name='TriggerAnalyzer',
-    # addTriggerObjects=True,
-    # requireTrigger=True,
-    # usePrescaled=False
-# )
+triggerAna = cfg.Analyzer(
+    TriggerAnalyzer,
+    name='TriggerAnalyzer',
+    addTriggerObjects=True,
+    requireTrigger=True,
+    usePrescaled=False
+)
 
 vertexAna = cfg.Analyzer(
     VertexAnalyzer,
@@ -173,6 +181,7 @@ sequence = cfg.Sequence([
     lheWeightAna,
     jsonAna,
     skimAna,
+    triggerAna,
     vertexAna,
     pileUpAna,
     HNLGenTreeAnalyzer,

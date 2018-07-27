@@ -48,6 +48,10 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookMuonTrack(self.tree, 'l0_matched_dgmuon_track')
         self.bookParticle (self.tree, 'l0_bestmatch'           )
         self.var(self.tree, 'l0_bestmatchtype')
+        # PROMPT ANA
+        self.bookEle(self.tree, 'prompt_ele') 
+        self.bookMuon(self.tree, 'prompt_mu') 
+        self.var(self.tree, 'prompt_ana_success')
        
 
         # displaced leptons (from the HN)
@@ -155,6 +159,12 @@ class HNLTreeProducer(TreeProducerBase):
         if hasattr(event.the_hnl.l0(), 'bestdgmuon'  ): self.fillParticle(self.tree, 'l0_matched_dgmuon'  , event.the_hnl.l0().bestdgmuon  ) ; self.fillMuonTrack(self.tree, 'l0_matched_dgmuon_track', event.the_hnl.l0().bestdgmuon )
         if event.the_hnl.l0().bestmatch != None: self.fillParticle(self.tree, 'l0_bestmatch'       , event.the_hnl.l0().bestmatch   )
         self.fill(self.tree, 'l0_bestmatchtype',event.the_hnl.l0().bestmatchtype)
+        if hasattr(event, 'the_prompt_cand'):
+            if abs(event.the_prompt_cand.pdgId()) == 11:
+                self.fillEle(self.tree, 'prompt_ele', event.the_prompt_cand)
+            elif abs(event.the_prompt_cand.pdgId()) == 13:
+                self.fillMuon(self.tree, 'prompt_mu', event.the_prompt_cand)
+            self.fill(self.tree, 'prompt_ana_success', event.prompt_ana_success)
         
         # displaced leptons (from the HN)
         self.fillParticle(self.tree, 'l1', event.the_hnl.l1())

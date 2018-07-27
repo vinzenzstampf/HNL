@@ -10,6 +10,7 @@ from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
 from PhysicsTools.Heppy.physicsobjects.Muon          import Muon
+from PhysicsTools.Heppy.physicsobjects.Electron      import Electron
 from PhysicsTools.Heppy.physicsobjects.PhysicsObject import PhysicsObject
 from CMGTools.HNL.utils.utils                        import isAncestor, displacement2D, displacement3D, makeRecoVertex
 from PhysicsTools.HeppyCore.utils.deltar             import deltaR, deltaPhi
@@ -28,7 +29,8 @@ class HNLAnalyzer(Analyzer):
 
     def declareHandles(self):
         super(HNLAnalyzer, self).declareHandles()
-
+        
+        self.handles['ele']    = AutoHandle(('slimmedElectrons', '','PAT'), 'std::vector<pat::Electron>')
         self.handles['muons']    = AutoHandle(('slimmedMuons'                 ,'','PAT' ), 'std::vector<pat::Muon>'                        )
         self.handles['dsamuons'] = AutoHandle(('displacedStandAloneMuons'     ,'','RECO'), 'std::vector<reco::Track>'                      )
         self.handles['dgmuons' ] = AutoHandle(('displacedGlobalMuons'         ,'','RECO'), 'std::vector<reco::Track>'                      )
@@ -69,6 +71,7 @@ class HNLAnalyzer(Analyzer):
         # produce collections and map our objects to convenient Heppy objects
         #####################################################################################
 
+        event.ele         = map(Electron, self.handles['ele'].product())
         # make muon collections
         event.muons       = map(Muon, self.handles['muons'].product())
         event.dsamuons    = self.buildDisplacedMuons(self.handles['dsamuons'].product())
@@ -91,27 +94,58 @@ class HNLAnalyzer(Analyzer):
             myvtx = event.beamspot
         
         self.assignVtx(event.muons, myvtx)
+        self.assignVtx(event.ele, myvtx)
 
-        #####################################################################################
-        # select only events with good gen events
-        #####################################################################################
-        if not( abs(event.the_hnl.l1().pdgId())==13   and \
-                abs(event.the_hnl.l2().pdgId())==13   and \
-                abs(event.the_hnl.l1().eta())   < 2.4 and \
-                abs(event.the_hnl.l2().eta())   < 2.4 and \
-                abs(event.the_hnl.l0().eta())   < 2.4): 
-            return False
+        event.n_ele = len(event.ele)
+        
+        # PROMPT ANALYSIS # SO FAR ONLY ELECTRONS
 
-        # FIXME! just for testing
-        if displacement2D(event.the_hn.lep1, event.the_hn) < 40:
-            return False
-#         if displacement2D(event.the_hn.lep1, event.the_hn) > 100:
-#             return False
-        # import pdb ; pdb.set_trace()
-        if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
-            return False
-        if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
-            return False
+       # MUONS TODO
+        mu_cand = []
+#        matchable_mu = [mu for mu in event.muons] 
+        # selection
+#        mu_sel_eta = 2.4; mu_sel_pt = 3; mu_sel_vtx = 0.2 
+        # match collections
+#        matchable_mu_sel_pt = [mu for mu in matchable_mu if (mu.pt() > mu_sel_pt)] 
+#        matchable_mu_sel_eta = [mu for mu in matchable_mu if (abs(mu.eta()) < mu_sel_eta)] 
+#        matchable_mu_sel_id = [mu for mu in matchable_mu if (mu.looseId() == True)] 
+        # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
+#        matchable_mu_sel_vtx = [mu for mu in matchable_mu if abs(mu.dz()) < mu_sel_vtx] # TODO what about dxy component ?
+        # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L104
+#        mu_cand = [mu for mu in matchable_mu if (mu in matchable_mu_sel_pt and mu in matchable_mu_sel_eta and mu in matchable_mu_sel_id and mu in matchable_mu_sel_vtx)]
+
+        # ELECTRONS
+        ele_cand = []
+        matchable_ele = [ele for ele in event.ele]
+        # selection
+        ele_sel_eta = 2.5; ele_sel_pt = 3; ele_sel_vtx = 0.2 
+        # match collections
+        matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
+        matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
+        matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90') == True)] 
+        # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
+        matchable_ele_sel_vtx = [ele for ele in matchable_ele if abs(ele.dz()) < ele_sel_vtx] # TODO what about dxy component ?
+        
+        ele_cand = [ele for ele in matchable_ele if (ele in matchable_ele_sel_pt and ele in matchable_ele_sel_eta and ele in matchable_ele_sel_id and ele in matchable_ele_sel_vtx)]
+        
+        prompt_cand = ele_cand + mu_cand
+
+        # EVALUATING THE PROMPT SELECTION: EFF / PUR
+        event.prompt_ana_success = -99 # NO RECO FOUND
+        if len(prompt_cand): 
+        # selection: pick candidate with highest pt (-2/1000 good ones)
+        # there must be something better; maybe if both are matched check some additional stuff
+            event.the_prompt_cand = sorted(prompt_cand, key = lambda lep: lep.pt(), reverse = True)[0]
+            # REMOVING PROMPT LEPTON FROM MATCHES # FIXME SO FAR ONLY ELE
+            if event.the_prompt_cand in ele_cand:
+                event.ele.remove(event.the_prompt_cand)
+                if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
+                    if  event.the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
+                        event.prompt_ana_success = 1
+                else: event.prompt_ana_success = -11 # FAKE ELECTRONS
+#            if event.the_prompt_cand in mu_cand:
+#                event.muons.remove(event.the_prompt_cand)
+#                event.prompt_ana_success = -13 # FAKE MUONS, FIXME REMOVE THIS IF NOT DEALING WITH E ON SHELL
 
         self.counters.counter('HNL').inc('good gen')
 
@@ -125,9 +159,6 @@ class HNLAnalyzer(Analyzer):
         
         dimuons = [(mu1, mu2) for mu1, mu2 in dimuons if deltaR(mu1, mu2)>0.01]
         
-        if not len(dimuons):
-            # return False
-            pass
         self.counters.counter('HNL').inc('> 0 di-muon + vtx')
         
         ########################################################################################
@@ -176,10 +207,6 @@ class HNLAnalyzer(Analyzer):
 #                     print dimuonsvtx[-1]
             else:
                 print 'FAILED!'
-            
-        if not len(dimuonsvtx):
-            # return False
-            pass
             
         self.counters.counter('HNL').inc('> 0 di-muon + vtx')
 
