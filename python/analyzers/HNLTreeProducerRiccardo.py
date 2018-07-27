@@ -159,7 +159,7 @@ class HNLTreeProducer(TreeProducerBase):
         if hasattr(event.the_hnl.l0(), 'bestdgmuon'  ): self.fillParticle(self.tree, 'l0_matched_dgmuon'  , event.the_hnl.l0().bestdgmuon  ) ; self.fillMuonTrack(self.tree, 'l0_matched_dgmuon_track', event.the_hnl.l0().bestdgmuon )
         if event.the_hnl.l0().bestmatch != None: self.fillParticle(self.tree, 'l0_bestmatch'       , event.the_hnl.l0().bestmatch   )
         self.fill(self.tree, 'l0_bestmatchtype',event.the_hnl.l0().bestmatchtype)
-        if hasattr(event, 'the_prompt_cand'):
+        if event.the_prompt_cand != None: # hasattr(event, 'the_prompt_cand'):
             if abs(event.the_prompt_cand.pdgId()) == 11:
                 self.fillEle(self.tree, 'prompt_ele', event.the_prompt_cand)
             elif abs(event.the_prompt_cand.pdgId()) == 13:
