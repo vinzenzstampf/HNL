@@ -57,16 +57,13 @@ pick_events        = getHeppyOption('pick_events', False)
 samples = [HN3L_M_2p5_V_0p00707106781187_mu_onshell]
 
 for sample in samples:
-    sample.triggers  = ['HLT_IsoMu24_v%d'   %i for i in range(1, 9)]
-    sample.triggers += ['HLT_IsoTkMu24_v%d' %i for i in range(1, 9)]
-    sample.triggers += ['HLT_IsoMu27_v%d'   %i for i in range(1, 9)]
-    sample.triggers += ['HLT_Mu50_v%d'      %i for i in range(1, 9)]
-    sample.triggers += ['HLT_TkMu50_v%d'    %i for i in range(1, 9)]
+    sample.triggers  = ['HLT_IsoMu24_v%d'                    %i for i in range(4, 5)] #muon trigger
+    sample.triggers += ['HLT_IsoMu27_v%d'                    %i for i in range(4, 5)] #muon trigger
+    sample.triggers += ['HLT_Mu50_v%d'                       %i for i in range(4, 5)] #muon trigger
 
-    sample.splitFactor = splitFactor(sample, 6e3)
-    sample.puFileData = puFileData
-    sample.puFileMC   = puFileMC
-
+    # sample.splitFactor = splitFactor(sample, 1e5)
+    # sample.puFileData = puFileData
+    # sample.puFileMC   = puFileMC
 selectedComponents = samples
 
 ###################################################
