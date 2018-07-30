@@ -2,6 +2,7 @@ import ROOT
 from CMGTools.HNL.analyzers.TreeProducerBase import TreeProducerBase
 from PhysicsTools.HeppyCore.utils.deltar import deltaR
 from CMGTools.HNL.utils.utils import isAncestor, displacement2D, displacement3D, makeRecoVertex # utility functions
+import PhysicsTools.HeppyCore.framework.config       as cfg
 from pdb import set_trace
 
 class HNLTreeProducer(TreeProducerBase):
@@ -30,9 +31,6 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookDisplacedMuon (self.tree,'dMu1MaxCosBPA')
         self.bookDisplacedMuon (self.tree,'dMu2MaxCosBPA')
 
-
-
-
         # output for mc analysis
         # the W->lN, N->llnu candidate
         self.bookHNL(self.tree, 'hnl')
@@ -51,7 +49,10 @@ class HNLTreeProducer(TreeProducerBase):
         self.bookParticle (self.tree, 'l0_bestmatch'           )
         self.var(self.tree, 'l0_bestmatchtype')
         self.var(self.tree, 'l0_bestmatchdR')
-        self.bookEle(self.tree, 'prompt_ele') 
+        if cfg.MODE == 'ele':
+            self.bookEle(self.tree, 'prompt_ele') 
+        if cfg.MODE == 'mu':
+            self.bookMuon(self.tree, 'prompt_mu') 
         self.var(self.tree, 'prompt_ana_success')
        
 
@@ -162,8 +163,10 @@ class HNLTreeProducer(TreeProducerBase):
         self.fill(self.tree, 'l0_bestmatchtype',event.the_hnl.l0().bestmatchtype)
         if hasattr(event.the_hnl.l0(), 'bestmatchdR'  ): self.fill       (self.tree, 'l0_bestmatchdR'     ,event.the_hnl.l0().bestmatchdR)
         if event.the_prompt_cand != None: # hasattr(event, 'the_prompt_cand'):
-            if abs(event.the_prompt_cand.pdgId()) == 11:
+            if cfg.MODE == 'ele':
                 self.fillEle(self.tree, 'prompt_ele', event.the_prompt_cand)
+            if cfg.MODE == 'mu':
+                self.fillMuon(self.tree, 'prompt_mu', event.the_prompt_cand)
             self.fill(self.tree, 'prompt_ana_success', event.prompt_ana_success)
         
         # displaced leptons (from the HN)

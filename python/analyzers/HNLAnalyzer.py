@@ -6,6 +6,7 @@ import ROOT
 from itertools import product, combinations
 from math import sqrt, pow
 
+import PhysicsTools.HeppyCore.framework.config       as cfg
 from PhysicsTools.Heppy.analyzers.core.Analyzer      import Analyzer
 from PhysicsTools.Heppy.analyzers.core.AutoHandle    import AutoHandle
 from PhysicsTools.Heppy.physicsobjects.GenParticle   import GenParticle
@@ -100,22 +101,42 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # Find the prompt lepton
         #####################################################################################
-
+        
         # ELECTRONS
         ele_cand = []
-        matchable_ele = [ele for ele in event.ele]
-        # selection
-        ele_sel_eta = 2.5; ele_sel_pt = 3; ele_sel_vtx = 0.2 
-        # match collections
-        matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
-        matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
-        matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90') == True)] 
-        # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
-        matchable_ele_sel_vtx = [ele for ele in matchable_ele if abs(ele.dz()) < ele_sel_vtx] # TODO what about dxy component ?
-        
-        ele_cand = [ele for ele in matchable_ele if (ele in matchable_ele_sel_pt and ele in matchable_ele_sel_eta and ele in matchable_ele_sel_id and ele in matchable_ele_sel_vtx)]
-        
-        prompt_cand = ele_cand 
+        if cfg.MODE == 'ele':
+            matchable_ele = [ele for ele in event.ele]
+            # selection
+            ele_sel_eta = 2.5; ele_sel_pt = 3; ele_sel_vtx = 0.2 
+            # match collections
+            matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
+            matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
+            matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90') == True)] 
+            # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
+            matchable_ele_sel_vtx = [ele for ele in matchable_ele if abs(ele.dz()) < ele_sel_vtx] # TODO what about dxy component ?
+            # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L104
+            ele_cand = [ele for ele in matchable_ele if (ele in matchable_ele_sel_pt and ele in matchable_ele_sel_eta and ele in matchable_ele_sel_id and ele in matchable_ele_sel_vtx)]
+            
+
+       # MUONS
+        mu_cand = []
+        if cfg.MODE == 'mu':
+            matchable_mu = [mu for mu in event.muons] 
+            # selection
+            mu_sel_eta = 2.4; mu_sel_pt = 3; mu_sel_vtx = 0.2 
+            # match collections
+            matchable_mu_sel_pt = [mu for mu in matchable_mu if (mu.pt() > mu_sel_pt)] 
+            matchable_mu_sel_eta = [mu for mu in matchable_mu if (abs(mu.eta()) < mu_sel_eta)] 
+            matchable_mu_sel_id = [mu for mu in matchable_mu if (mu.looseId() == True)] 
+            # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
+            matchable_mu_sel_vtx = [mu for mu in matchable_mu if abs(mu.dz()) < mu_sel_vtx] # TODO what about dxy component ?
+            # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L104
+            mu_cand = [mu for mu in matchable_mu if (mu in matchable_mu_sel_pt and mu in matchable_mu_sel_eta and mu in matchable_mu_sel_id and mu in matchable_mu_sel_vtx)]
+
+        # PROMPT CANDIDATE
+        prompt_cand = ele_cand + mu_cand # ONE IS ALWAYS EMPTY; check this:
+        if cfg.MODE == 'mu' and not len(ele_cand) == 0: set_trace()
+        if cfg.MODE == 'ele' and not len(mu_cand) == 0: set_trace()
         the_prompt_cand = None
         # EVALUATING THE PROMPT SELECTION: EFF / PUR
         event.prompt_ana_success = -99 # NO RECO FOUND
@@ -125,16 +146,20 @@ class HNLAnalyzer(Analyzer):
         # there must be something better; maybe if both are matched check some additional stuff
             the_prompt_cand = sorted(prompt_cand, key = lambda lep: lep.pt(), reverse = True)[0]
 #            event.the_prompt_cand = the_prompt_cand # TODO WHEN TRIGGER STUFF IS DONE, MOVE THIS LINE AFTER TRIGGERS
-            # REMOVING PROMPT LEPTON FROM MATCHES 
+            # REMOVING PROMPT LEPTON FROM MATCHES
+            # AND EVALUATING ANALYZER 
             if the_prompt_cand in ele_cand:
                 event.ele.remove(the_prompt_cand)
                 if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
                     if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
                         event.prompt_ana_success = 1
                 else: event.prompt_ana_success = -11 # FAKE ELECTRONS
-#            if event.the_prompt_cand in mu_cand:
-#                event.muons.remove(event.the_prompt_cand)
-#                event.prompt_ana_success = -13 # FAKE MUONS, FIXME REMOVE THIS IF NOT DEALING WITH E ON SHELL
+            if the_prompt_cand in mu_cand:
+                event.muons.remove(the_prompt_cand)
+                if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
+                    if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
+                        event.prompt_ana_success = 1
+                else: event.prompt_ana_success = -13 # FAKE MUONS
 
         # TRIGGER MATCHING
         # match only if the trigger fired
@@ -143,31 +168,31 @@ class HNLAnalyzer(Analyzer):
         # trigger matching
         if hasattr(self.cfg_ana, 'trigger_match') and len(self.cfg_ana.trigger_match.keys())>0:
                                    
-            for ele in the_prompt_cand:
+            for lep in the_prompt_cand:
                 
 #                triplet.hltmatched = [] # initialise to no match
-                ele.hltmatched = [] # initialise to no match
+                lep.hltmatched = [] # initialise to no match
                 
 #               triplet.trig_objs = OrderedDict()
 #               triplet.trig_objs[1] = [] # initialise to no trigger objct matches
 #               triplet.trig_objs[2] = [] # initialise to no trigger objct matches
 #               triplet.trig_objs[3] = [] # initialise to no trigger objct matches
-                ele.trig_objs = OrderedDict()
-                ele.trig_objs[1] = [] # initialise to no trigger objct matches
+                lep.trig_objs = OrderedDict()
+                lep.trig_objs[1] = [] # initialise to no trigger objct matches
     
 #               triplet.trig_matched = OrderedDict()
 #               triplet.trig_matched[1] = False # initialise to no match
 #               triplet.trig_matched[2] = False # initialise to no match
 #               triplet.trig_matched[3] = False # initialise to no match
-                ele.trig_matched = OrderedDict()
-                ele.trig_matched[1] = False # initialise to no match
+                lep.trig_matched = OrderedDict()
+                lep.trig_matched[1] = False # initialise to no match
 
 #               triplet.best_trig_match = OrderedDict()
 #               triplet.best_trig_match[1] = OrderedDict()
 #               triplet.best_trig_match[2] = OrderedDict()
 #               triplet.best_trig_match[3] = OrderedDict()
-                ele.best_trig_match = OrderedDict()
-                ele.best_trig_match[1] = OrderedDict()
+                lep.best_trig_match = OrderedDict()
+                lep.best_trig_match[1] = OrderedDict()
 
                 # add all matched objects to each muon
                 for info in event.trigger_infos:
@@ -178,12 +203,12 @@ class HNLAnalyzer(Analyzer):
 #                    these_objects1 = sorted([obj for obj in info.objects if deltaR(triplet.mu1(), obj)<0.15], key = lambda x : deltaR(x, triplet.mu1()))
 #                    these_objects2 = sorted([obj for obj in info.objects if deltaR(triplet.mu2(), obj)<0.15], key = lambda x : deltaR(x, triplet.mu2()))
 #                    these_objects3 = sorted([obj for obj in info.objects if deltaR(triplet.mu3(), obj)<0.15], key = lambda x : deltaR(x, triplet.mu3()))
-                    these_objects = sorted([obj for obj in info.objects if deltaR(ele, obj)<0.15], key = lambda x : deltaR(x, ele))
+                    these_objects = sorted([obj for obj in info.objects if deltaR(lep, obj)<0.15], key = lambda x : deltaR(x, lep))
 
 #                   triplet.trig_objs[1] += these_objects1
 #                   triplet.trig_objs[2] += these_objects2
 #                   triplet.trig_objs[3] += these_objects3
-                    ele.trig_objs[1] += these_objects
+                    lep.trig_objs[1] += these_objects
 
                     # get the set of trigger types from the cfg 
                     trigger_types_to_match = self.cfg_ana.trigger_match[mykey][1]
@@ -195,9 +220,9 @@ class HNLAnalyzer(Analyzer):
 #                    triplet.best_trig_match[1][mykey] = None
 #                    triplet.best_trig_match[2][mykey] = None
 #                    triplet.best_trig_match[3][mykey] = None
-                    ele.best_trig_match[1][mykey] = None
+                    lep.best_trig_match[1][mykey] = None
 
-                    # investigate all the possible matches (eles, pairs or singlets)
+                    # investigate all the possible matches (leps, pairs or singlets)
                    # for to1, to2, to3 in product(these_objects1, these_objects2, these_objects3):
                     for t_o in these_objects:
                         # avoid double matches!
@@ -211,15 +236,15 @@ class HNLAnalyzer(Analyzer):
                             itypes[ikey] = sum([1 for iobj in t_o if iobj.triggerObjectTypes()[0]==ikey])
                                             
                         # all the types to match are matched then assign the 
-                        # corresponding trigger object to each ele
+                        # corresponding trigger object to each lep
                         if itypes & trigger_types_to_match == trigger_types_to_match:
                             #good_matches.append((to1, to2, to3))
                             good_matches.append(t_o)
                     
                     
                     if len(good_matches):
-                        # good_matches.sort(key = lambda x : deltaR(x[0], ele.mu1()) + deltaR(x[1], ele.mu2()) + deltaR(x[2], ele.mu3()))        
-                        good_matches.sort(key = lambda x : deltaR(x, ele))        
+                        # good_matches.sort(key = lambda x : deltaR(x[0], lep.mu1()) + deltaR(x[1], lep.mu2()) + deltaR(x[2], lep.mu3()))        
+                        good_matches.sort(key = lambda x : deltaR(x, lep))        
 
                         # ONLY for HLT_DoubleMu3_Trk_Tau3mu
                         # it might happen that more than one combination of trk mu mu is found,
@@ -244,9 +269,9 @@ class HNLAnalyzer(Analyzer):
 #                          
 #                          good_matches = good_matches_tmp
 #                          
-#                      ele.best_trig_match[1][mykey] = good_matches[0][0] if len(good_matches) and len(good_matches[0])>0 else None
-#                      ele.best_trig_match[2][mykey] = good_matches[0][1] if len(good_matches) and len(good_matches[0])>1 else None
-#                      ele.best_trig_match[3][mykey] = good_matches[0][2] if len(good_matches) and len(good_matches[0])>2 else None
+#                      lep.best_trig_match[1][mykey] = good_matches[0][0] if len(good_matches) and len(good_matches[0])>0 else None
+#                      lep.best_trig_match[2][mykey] = good_matches[0][1] if len(good_matches) and len(good_matches[0])>1 else None
+#                      lep.best_trig_match[3][mykey] = good_matches[0][2] if len(good_matches) and len(good_matches[0])>2 else None
                 
                 # iterate over the path:filters dictionary
                 #     the filters MUST be sorted correctly: i.e. first filter in the dictionary 
@@ -259,18 +284,18 @@ class HNLAnalyzer(Analyzer):
                     v = vv[0]
                                                                  
                     for ii, filters in enumerate(v):
-                        if not ele.best_trig_match[ii+1][k]:
+                        if not lep.best_trig_match[ii+1][k]:
                             continue
-                        if set([filters]) & set(ele.best_trig_match[ii+1][k].filterLabels()):
-                            ele.trig_matched[ii+1] = True                 
+                        if set([filters]) & set(lep.best_trig_match[ii+1][k].filterLabels()):
+                            lep.trig_matched[ii+1] = True                 
                     
-                    ismatched = sum(ele.trig_matched.values())            
+                    ismatched = sum(lep.trig_matched.values())            
                                 
                     if len(v) == ismatched:
-                        ele.hltmatched.append(k)
+                        lep.hltmatched.append(k)
 
 #            seltau3mu = [triplet for triplet in seltau3mu if len(triplet.hltmatched)>0]
-            the_prompt_cand = [ele for ele in the_prompt_cand if len(ele.hltmatched)>0]
+            the_prompt_cand = [lep for lep in the_prompt_cand if len(lep.hltmatched)>0]
             
 #            if len(the_prompt_cand) == 0:
 #                return False #TODO  UNCOMMENT THIS IN FINAL VERSION
@@ -336,12 +361,15 @@ class HNLAnalyzer(Analyzer):
                 abs(event.the_hnl.l1().eta())   < 2.4 and \
                 abs(event.the_hnl.l2().eta())   < 2.4 and \
                 abs(event.the_hnl.l0().eta())   < 2.5): 
-            return False
+           # return False
+            print ('awesome')
 
         if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
-            return False
+          #  return False
+            print ('awesome')
         if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
-            return False
+          #  return False
+            print ('awesome')
 
         self.counters.counter('HNL').inc('good gen')
 
@@ -380,7 +408,8 @@ class HNLAnalyzer(Analyzer):
             if not pair[0]==pair[1]:
                 sv = fitVertex(pair)
                 if sv != None:
-                    dimuons.append(DiLepton(pair,sv,myvtx,event.beamspot))
+#                    dimuons.append(DiLepton(pair,sv,myvtx,event.beamspot))
+                     print ('awesome')
 
         #####################################################################################
         # Check whether the correct dimuon is part of the collection dimuons
