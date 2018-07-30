@@ -102,31 +102,31 @@ class HNLAnalyzer(Analyzer):
 
        # MUONS TODO
         mu_cand = []
-#        matchable_mu = [mu for mu in event.muons] 
+        matchable_mu = [mu for mu in event.muons] 
         # selection
-#        mu_sel_eta = 2.4; mu_sel_pt = 3; mu_sel_vtx = 0.2 
+        mu_sel_eta = 2.4; mu_sel_pt = 3; mu_sel_vtx = 0.2 
         # match collections
-#        matchable_mu_sel_pt = [mu for mu in matchable_mu if (mu.pt() > mu_sel_pt)] 
-#        matchable_mu_sel_eta = [mu for mu in matchable_mu if (abs(mu.eta()) < mu_sel_eta)] 
-#        matchable_mu_sel_id = [mu for mu in matchable_mu if (mu.looseId() == True)] 
+        matchable_mu_sel_pt = [mu for mu in matchable_mu if (mu.pt() > mu_sel_pt)] 
+        matchable_mu_sel_eta = [mu for mu in matchable_mu if (abs(mu.eta()) < mu_sel_eta)] 
+        matchable_mu_sel_id = [mu for mu in matchable_mu if (mu.looseId() == True)] 
         # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
-#        matchable_mu_sel_vtx = [mu for mu in matchable_mu if abs(mu.dz()) < mu_sel_vtx] # TODO what about dxy component ?
+        matchable_mu_sel_vtx = [mu for mu in matchable_mu if abs(mu.dz()) < mu_sel_vtx] # TODO what about dxy component ?
         # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L104
-#        mu_cand = [mu for mu in matchable_mu if (mu in matchable_mu_sel_pt and mu in matchable_mu_sel_eta and mu in matchable_mu_sel_id and mu in matchable_mu_sel_vtx)]
+        mu_cand = [mu for mu in matchable_mu if (mu in matchable_mu_sel_pt and mu in matchable_mu_sel_eta and mu in matchable_mu_sel_id and mu in matchable_mu_sel_vtx)]
 
         # ELECTRONS
         ele_cand = []
-        matchable_ele = [ele for ele in event.ele]
+#        matchable_ele = [ele for ele in event.ele]
         # selection
-        ele_sel_eta = 2.5; ele_sel_pt = 3; ele_sel_vtx = 0.2 
+#        ele_sel_eta = 2.5; ele_sel_pt = 3; ele_sel_vtx = 0.2 
         # match collections
-        matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
-        matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
-        matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90') == True)] 
+#        matchable_ele_sel_pt = [ele for ele in matchable_ele if (ele.pt() > ele_sel_pt)] 
+#        matchable_ele_sel_eta = [ele for ele in matchable_ele if (abs(ele.eta()) < ele_sel_eta)] 
+#        matchable_ele_sel_id = [ele for ele in matchable_ele if (ele.mvaIDRun2('NonTrigSpring15MiniAOD', 'POG90') == True)] 
         # https://github.com/rmanzoni/cmgtools-lite/blob/825_HTT/H2TauTau/python/proto/analyzers/TauEleAnalyzer.py#L193
-        matchable_ele_sel_vtx = [ele for ele in matchable_ele if abs(ele.dz()) < ele_sel_vtx] # TODO what about dxy component ?
+#        matchable_ele_sel_vtx = [ele for ele in matchable_ele if abs(ele.dz()) < ele_sel_vtx] # TODO what about dxy component ?
         
-        ele_cand = [ele for ele in matchable_ele if (ele in matchable_ele_sel_pt and ele in matchable_ele_sel_eta and ele in matchable_ele_sel_id and ele in matchable_ele_sel_vtx)]
+#        ele_cand = [ele for ele in matchable_ele if (ele in matchable_ele_sel_pt and ele in matchable_ele_sel_eta and ele in matchable_ele_sel_id and ele in matchable_ele_sel_vtx)]
         
         prompt_cand = ele_cand + mu_cand
         the_prompt_cand = None
@@ -139,15 +139,12 @@ class HNLAnalyzer(Analyzer):
             the_prompt_cand = sorted(prompt_cand, key = lambda lep: lep.pt(), reverse = True)[0]
 #            event.the_prompt_cand = the_prompt_cand # TODO WHEN TRIGGER STUFF IS DONE, MOVE THIS LINE AFTER TRIGGERS
             # REMOVING PROMPT LEPTON FROM MATCHES 
-            if the_prompt_cand in ele_cand:
-                event.ele.remove(the_prompt_cand)
+            if the_prompt_cand in mu_cand:
+                event.muons.remove(the_prompt_cand)
                 if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
                     if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
                         event.prompt_ana_success = 1
-                else: event.prompt_ana_success = -11 # FAKE ELECTRONS
-#            if event.the_prompt_cand in mu_cand:
-#                event.muons.remove(event.the_prompt_cand)
-#                event.prompt_ana_success = -13 # FAKE MUONS, FIXME REMOVE THIS IF NOT DEALING WITH E ON SHELL
+                else: event.prompt_ana_success = -13 # FAKE MUONS 
 
         # TRIGGER MATCHING
         # match only if the trigger fired
