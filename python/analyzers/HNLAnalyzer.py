@@ -161,10 +161,10 @@ class HNLAnalyzer(Analyzer):
             the_prompt_cand = sorted(prompt_cand, key = lambda lep: lep.pt(), reverse = True)[0]
 #           # REMOVING PROMPT LEPTON FROM MATCHES
 #           # AND EVALUATING ANALYZER 
+#            print(the_prompt_cand)
             if the_prompt_cand in ele_cand:
-                event.ele.remove(the_prompt_cand)
-#                for i in event.ele:
-#                    if i.physObj() == the_prompt_cand.physObj(): event.ele.remove(i)               
+                for i in event.ele:
+                    if i.physObj == the_prompt_cand.physObj: event.ele.remove(i)               
                 if cfg.DataSignalMode == 'signal':
                     if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
                         if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
@@ -172,11 +172,7 @@ class HNLAnalyzer(Analyzer):
                         else: event.prompt_ana_success = -11 # FAKE ELECTRONS
             if the_prompt_cand in mu_cand:
                 for i in event.muons:
-                    if i.physObj() == the_prompt_cand.physObj(): event.muons.remove(i)               
-#                try: 
-#                    event.muons.remove(the_prompt_cand)
-#                except ValueError: 
-#                    set_trace()
+                    if i.physObj == the_prompt_cand.physObj: event.muons.remove(i)               
                 if cfg.DataSignalMode == 'signal':
                     if hasattr(event.the_hnl.l0().bestmatch, 'physObj'):
                         if  the_prompt_cand.physObj == event.the_hnl.l0().bestmatch.physObj:
@@ -215,23 +211,23 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # select only events with good gen events
         #####################################################################################
-        if cfg.DataSignalMode == 'signal':
-            if not( abs(event.the_hnl.l1().pdgId())==13   and \
-                    abs(event.the_hnl.l2().pdgId())==13   and \
-                    # abs(event.the_hnl.l0().pdgId())==11   and \
-                    abs(event.the_hnl.l0().pdgId())==13   and \
-                    abs(event.the_hnl.l1().eta())   < 2.4 and \
-                    abs(event.the_hnl.l2().eta())   < 2.4 and \
-                    # abs(event.the_hnl.l0().eta())   < 2.5): 
-                    abs(event.the_hnl.l0().eta())   < 2.4): 
-                return False
+#        if cfg.DataSignalMode == 'signal':
+#            if not( abs(event.the_hnl.l1().pdgId())==13   and \
+#                    abs(event.the_hnl.l2().pdgId())==13   and \
+#                    # abs(event.the_hnl.l0().pdgId())==11   and \
+#                    abs(event.the_hnl.l0().pdgId())==13   and \
+#                    abs(event.the_hnl.l1().eta())   < 2.4 and \
+#                    abs(event.the_hnl.l2().eta())   < 2.4 and \
+#                    # abs(event.the_hnl.l0().eta())   < 2.5): 
+#                    abs(event.the_hnl.l0().eta())   < 2.4): 
+#                return False
+#
+#            if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
+#                return False
+#            if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
+#                return False
 
-            if (not hasattr(event.the_hnl.l1(), 'bestmatch')) or (event.the_hnl.l1().bestmatch is None):
-                return False
-            if (not hasattr(event.the_hnl.l2(), 'bestmatch')) or (event.the_hnl.l2().bestmatch is None):
-                return False
-
-            self.counters.counter('HNL').inc('good gen')
+#            self.counters.counter('HNL').inc('good gen')
 
         # #####################################################################################
         # Preselection for the reco muons before pairing them
@@ -272,13 +268,13 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # Check whether the correct dimuon is part of the collection dimuons
         #####################################################################################
-        if cfg.DataSignalMode == 'signal':
-            if len(dimuons) > 0:
-                for dimu in dimuons:
-                    dMu1 = dimu.lep1()
-                    dMu2 = dimu.lep2() 
-                    if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
-                        event.flag_IsThereTHEDimuon = True
+#       if cfg.DataSignalMode == 'signal':
+#           if len(dimuons) > 0:
+#               for dimu in dimuons:
+#                   dMu1 = dimu.lep1()
+#                   dMu2 = dimu.lep2() 
+#                   if (dMu1.physObj == event.the_hnl.l1().bestmatch.physObj or dMu1.physObj == event.the_hnl.l2().bestmatch.physObj) and (dMu2.physObj == event.the_hnl.l1().bestmatch.physObj or dMu2.physObj == event.the_hnl.l2().bestmatch.physObj):
+#                       event.flag_IsThereTHEDimuon = True
 
 
         #####################################################################################
