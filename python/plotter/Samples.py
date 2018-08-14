@@ -66,19 +66,19 @@ def createSampleLists(analysis_dir='/afs/cern.ch/user/v/vstampf/work/public/prod
     elif channel == 'tau_fr':
         tree_prod_name = 'TauFRTreeProducer'
 
-    samples_essential += [
+    samples_essential = [
         SampleCfg(name='DYJets', dir_name=DYJetsToLL_M50_ext.name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
-                  xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents, weight_expr=ztt_cut),
+                  xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents),
         ]
 
-    if no_data:
-        samples_data = []
+    samples_data = []
 
-    samples_additional += [
+    samples_additional = [
         SampleCfg(name='ZZTo4L', dir_name='ZZTo4L', ana_dir=analysis_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L.xSection, sumweights=ZZTo4L.nGenEvents),
         SampleCfg(name='WZTo3Lnu', dir_name='WZTo3LNu', ana_dir=analysis_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu.xSection, sumweights=WZTo3LNu.nGenEvents),
     ]
 
+    samples_mc = samples_essential + samples_additional 
     samples = samples_essential + samples_additional + samples_data
     all_samples = samples_mc + samples_data
 
@@ -100,7 +100,6 @@ def createSampleLists(analysis_dir='/afs/cern.ch/user/v/vstampf/work/public/prod
             sample.scale = sample.scale * signal_scale
 
     return samples_mc, samples_data, samples, all_samples, sampleDict
-
 
 def setSumWeights(sample, weight_dir='MCWeighter'):
     if isinstance(sample, HistogramCfg) or sample.is_data:

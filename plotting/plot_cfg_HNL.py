@@ -11,7 +11,7 @@ from CMGTools.HNL.plotter.HistDrawer import HistDrawer
 from CMGTools.HNL.plotter.Variables import taumu_vars, hnl_vars, getVars
 from CMGTools.HNL.plotter.helper_methods import getVertexWeight
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
-
+from pdb import set_trace
 # from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
 from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
 
@@ -27,7 +27,7 @@ binning_mssm_btag = array([0.,20.,40.,60.,80.,100.,120.,140.,160.,180.,200.,250.
 binning_mva = array([0., 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95, 0.975, 0.985, 0.9925, 1.001])
 binning_mva2 = array([0., 0.05, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95, 0.975, 1.001])
 
-def prepareCuts(mode):
+def prepareCuts():
     cuts = []
     inc_cut = '&&'.join([cat_Inc])
     # inc_cut += '&& l2_decayModeFinding'
@@ -39,10 +39,10 @@ def prepareCuts(mode):
 
     return cuts, mt_cut
 
-def createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):
+def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss):
     hist_dict = {}
     sample_dict = {}
-
+#    set_trace()
     samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir)
 
     sample_dict['all_samples'] = all_samples
@@ -153,11 +153,6 @@ if __name__ == '__main__':
 
     friend_func = None
     
-    int_lumi = lumi
-
-    if data2016G:
-        int_lumi = lumi_2016G
-        
     qcd_from_same_sign = True
     w_qcd_mssm_method = True
     r_qcd_os_ss = 1.17
@@ -165,7 +160,6 @@ if __name__ == '__main__':
     run_central = True
     add_ttbar_sys = False
     add_tes_sys = False
-
 
     analysis_dir = '/eos/user/v/vstampf/ntuples/bkg_mc/' # input
 
@@ -177,17 +171,13 @@ if __name__ == '__main__':
 
     print total_weight
 
-    cuts, mt_cut = prepareCuts(mode)
+    cuts, mt_cut = prepareCuts()
 
     variables = createVariables()
 
-    if run_central:
-        sample_dict, hist_dict = createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss)
-        makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_same_sign, w_qcd_mssm_method, mt_cut, friend_func, dc_postfix='', create_trees=False)
-
-        sample_dict, hist_dict = createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
-        sample_dict_tes = {'all_samples':[s for s in sample_dict['all_samples'] if s.name in tes_samples]}
-        makePlots(variables, cuts, total_weight, sample_dict_tes, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=False)
+    sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
+    sample_dict_tes = {'all_samples':[s for s in sample_dict['all_samples'] if s.name in tes_samples]}
+    makePlots(variables, cuts, total_weight, sample_dict_tes, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=False)
 
 
 
