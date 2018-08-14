@@ -72,11 +72,7 @@ def createVariables():
     # Taken from Variables.py; can get subset with e.g. getVars(['mt', 'mvis'])
     # variables = taumu_vars
     # variables = getVars(['_norm_', 'mt', 'mvis', 'l1_pt', 'l2_pt', 'l1_eta', 'l2_eta', 'n_vertices', 'n_jets', 'n_bjets'])
-
     variables = hnl_vars
-
-        # MVA training variables, and others
-#        variables += getVars(['mt', 'l2_mt', 'n_jets', 'met_pt', 'pthiggs', 'vbf_mjj', 'vbf_deta', 'vbf_n_central', 'l2_pt', 'l1_pt','mvis', 'l1_eta', 'l2_eta', 'delta_phi_l1_l2', 'delta_eta_l1_l2', 'pt_l1l2', 'delta_phi_j1_met', 'pzeta_disc', 'jet1_pt', 'jet1_eta'])#  'svfit_transverse_mass', 
 
     return variables
 
@@ -171,7 +167,7 @@ if __name__ == '__main__':
     add_tes_sys = False
 
 
-    analysis_dir = '/data1/steggema/mt/051016/MuTauMC/'
+    analysis_dir = '/eos/user/v/vstampf/ntuples/bkg_mc/' # input
 
     total_weight = 'weight'
     total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
@@ -189,7 +185,6 @@ if __name__ == '__main__':
         sample_dict, hist_dict = createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss)
         makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_same_sign, w_qcd_mssm_method, mt_cut, friend_func, dc_postfix='', create_trees=False)
 
-        analysis_dir = '/data1/steggema/mt/070416/TauMuSVFitTESUp/'
         sample_dict, hist_dict = createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
         sample_dict_tes = {'all_samples':[s for s in sample_dict['all_samples'] if s.name in tes_samples]}
         makePlots(variables, cuts, total_weight, sample_dict_tes, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=False)
