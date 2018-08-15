@@ -3,11 +3,10 @@ import hashlib
 from array import array
 
 # Adds MultiDraw method to ROOT.TTree
-import CMGTools.H2TauTau.proto.plotter.MultiDraw
+import CMGTools.HNL.plotter.MultiDraw
 
-from CMGTools.H2TauTau.proto.plotter.PlotConfigs import HistogramCfg
-from CMGTools.H2TauTau.proto.plotter.DataMCPlot import DataMCPlot
-
+from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg
+from CMGTools.HNL.plotter.DataMCPlot import DataMCPlot
 
 from CMGTools.RootTools.DataMC.Histogram import Histogram
 

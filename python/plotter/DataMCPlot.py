@@ -7,7 +7,7 @@ from ROOT import TLegend, TLine, TPad, TFile, gROOT
 from CMGTools.RootTools.DataMC.Histogram import Histogram
 from CMGTools.RootTools.DataMC.Stack import Stack
 
-from CMGTools.H2TauTau.proto.plotter.H2TauStyle import histPref, Style
+from CMGTools.HNL.plotter.H2TauStyle import histPref, Style
 
 
 def ymax(hists):

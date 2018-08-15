@@ -20,6 +20,8 @@ from CMGTools.HNL.plotter.metrics import ams_hists
 
 Cut = namedtuple('Cut', ['name', 'cut'])
 
+int_lumi = 41000.0 #### FIXME 
+
 binning_mssm = array([0.,10.,20.,30.,40.,50.,60.,70.,80.,90.,100.,110.,120.,130.,140.,150.,160.,170.,180.,190.,200.,225.,250.,275.,300.,325.,350.,400.,500.,700.,900.,1100.,1300.,1500.,1700.,1900.,2100.,2300.,2500.,2700.,2900.,3100.,3300.,3500.,3700.,3900.])
 
 binning_mssm_btag = array([0.,20.,40.,60.,80.,100.,120.,140.,160.,180.,200.,250.,300.,350.,400.,500.,700.,900.,1100.,1300.,1500.,1700.,1900.,2100.,2300.,2500.,2700.,2900.,3100.,3300.,3500.,3700.,3900.])
@@ -33,9 +35,9 @@ def prepareCuts():
     # inc_cut += '&& l2_decayModeFinding'
 
     mt_cut = 'mt<40'
-    inc_cut += '&& n_bjets==0'
+    inc_cut += '&& nbj<3'
 
-    cuts.append(Cut('inclusive', inc_cut + '&&  l1_charge != l2_charge'))
+    cuts.append(Cut('inclusive', inc_cut + '&&  l1_q != l2_q'))
 
     return cuts, mt_cut
 
@@ -80,38 +82,9 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
     ams_dict = {}
     sample_names = set()
     for cut in cuts:
-        if qcd_from_same_sign and not 'SS' in cut.name and not w_qcd_mssm_method:
-            cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_qcdfromss'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        elif w_qcd_mssm_method:
-            cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['samples_mssm_method'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-            hist_dict['wjets'].cut = cut.cut # since wjets is a sub-HistogramCfg
-        else:
-            cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
-        
-        if qcd_from_same_sign and not 'SS' in cut.name:
-            hist_dict['qcd'].cut = cut.cut.replace('l1_charge != l2_charge', 'l1_charge == l2_charge')
-
-        if w_qcd_mssm_method:
-            estimateQCDWMSSM(hist_dict, cut, mt_cut, friend_func=friend_func, r_qcd_os_ss=r_qcd_os_ss)
-
+        cfg_main = HistogramCfg(name=cut.name, var=None, cfgs=sample_dict['all_samples'], cut=cut.cut, lumi=int_lumi, weight=total_weight)
+    
         cfg_main.vars = variables
-        if qcd_from_same_sign:
-            hist_dict['qcd'].vars = variables # Can put into function but we will not want it by default if we take normalisations from e.g. high MT
-        if w_qcd_mssm_method:
-            hist_dict['wjets'].vars = variables # Can put into function but we will not want it by default if we take normalisations from e.g. high MT
-            hist_dict['qcd'].vars = variables
-            hist_dict['wjets_ss'].vars = variables
-
-        for variable in variables:
-            if variable.name in ['svfit_mass', 'svfit_transverse_mass', 'mvis'] and 'mssm' in mode:
-                if cut.name in ['inclusive', 'nobtag']:
-                    variable.binning = binning_mssm
-                elif cut.name in ['btag']:
-                    variable.binning = binning_mssm_btag
-
-        if create_trees:
-            createTrees(cfg_main, '/data1/steggema/mt/MVATrees', verbose=True)
-            continue
 
         plots = createHistograms(cfg_main, verbose=False, friend_func=friend_func)
         for variable in variables:
@@ -122,14 +95,14 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
                 plot.Group('W', ['W', 'W1Jets', 'W2Jets', 'W3Jets', 'W4Jets'])
             plot.Group('Electroweak', ['VV', 'W'])
             # plot.Group('Single t', ['T_tWch', 'TBar_tWch', 'TToLeptons_sch', 'TToLeptons_tch'])
-            plot.Group('ZTT', ['ZTT', 'ZJ'], style=plot.Hist('ZTT').style)
+#            plot.Group('ZTT', ['ZTT', 'ZJ'], style=plot.Hist('ZTT').style)
             if make_plots:
                 HistDrawer.draw(plot, plot_dir='plots/'+cut.name)
             if variable.name in ['mvis', 'svfit_transverse_mass', 'svfit_mass', 'mva', 'mva2div1', 'mva1', 'mva2', 'l2_nc_ratio']:
                 plot.WriteDataCard(filename='datacard_{mode}_{var}.root'.format(mode=mode, var=variable.name), dir='mt_' + cut.name, mode='UPDATE', postfix=dc_postfix) #mt = mu-tau
-            for signal_hist in plot.SignalHists():
-                sample_names.add(signal_hist.name)
-                ams_dict[variable.name + '__' + cut.name + '__' + signal_hist.name + '_'] = ams_hists(signal_hist.weighted, plot.BGHist().weighted)
+#            for signal_hist in plot.SignalHists():
+#                sample_names.add(signal_hist.name)
+#                ams_dict[variable.name + '__' + cut.name + '__' + signal_hist.name + '_'] = ams_hists(signal_hist.weighted, plot.BGHist().weighted)
 
     print '\nOptimisation results:'
     all_vals = ams_dict.items()
@@ -161,10 +134,10 @@ if __name__ == '__main__':
     add_ttbar_sys = False
     add_tes_sys = False
 
-    analysis_dir = '/eos/user/v/vstampf/ntuples/bkg_mc/' # input
+    analysis_dir = '/eos/user/v/vstampf/ntuples/bkg_mc_prompt_e/' # input
 
-    total_weight = 'weight'
-    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
+    total_weight = ''
+#    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
 
     if data2016G:
         total_weight = '(' + total_weight + '*' + getVertexWeight(True) + ')'
@@ -176,8 +149,8 @@ if __name__ == '__main__':
     variables = createVariables()
 
     sample_dict, hist_dict = createSamples(analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
-    sample_dict_tes = {'all_samples':[s for s in sample_dict['all_samples'] if s.name in tes_samples]}
-    makePlots(variables, cuts, total_weight, sample_dict_tes, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=False)
+#    sample_dict_tes = {'all_samples':[s for s in sample_dict['all_samples'] if s.name in tes_samples]}
+    makePlots(variables, cuts, total_weight, sample_dict, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=True)
 
 
 

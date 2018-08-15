@@ -42,36 +42,27 @@ w_exps = []
 # w_exp = '({w})'.format(w=' + '.join(w_exps))
 
 
-def createSampleLists(analysis_dir='/afs/cern.ch/user/v/vstampf/work/public/prod',
-                      channel='mt',
+def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/bkg_mc_prompt_e/', #'/afs/cern.ch/user/v/vstampf/work/public/prod',
+                      channel='e',
                       mode='sm',
-                      ztt_cut='(l2_gen_match == 5)', zl_cut='(l2_gen_match < 5)',
-                      zj_cut='(l2_gen_match == 6)',
+                      ztt_cut='', zl_cut='',
+                      zj_cut='',
                       data2016G=False,
                       signal_scale=1.,
                       no_data=False):
-    # -> Possibly from cfg like in the past, but may also make sense to enter directly
-#    if channel == 'e':
-#        tree_prod_name = 
-    if channel == 'mt':
-        tree_prod_name = 'H2TauTauTreeProducerTauMu'
-    elif channel == 'et':
-        tree_prod_name = 'H2TauTauTreeProducerTauEle'
-    elif channel == 'mm':
-        tree_prod_name = 'H2TauTauTreeProducerMuMu'
-    elif channel == 'tt':
-        tree_prod_name = 'H2TauTauTreeProducerTauTau'
-    elif channel == 'em':
-        tree_prod_name = 'H2TauTauTreeProducerMuEle'
-    elif channel == 'tau_fr':
-        tree_prod_name = 'TauFRTreeProducer'
+    if channel == 'e':
+        tree_prod_name = 'HNLTreeProducerPromptEle' 
+    if channel == 'mu':
+        tree_prod_name = 'HNLTreeProducerPromptMu' 
 
     samples_essential = [
         SampleCfg(name='DYJets', dir_name=DYJetsToLL_M50_ext.name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
                   xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents),
         ]
 
-    samples_data = []
+    # FIXME
+    samples_data = [SampleCfg(name='fakedata(tt)', dir_name=TTJets_amcat.name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
+                  xsec=TTJets_amcat.xSection, sumweights=TTJets_amcat.nGenEvents)]
 
     samples_additional = [
         SampleCfg(name='ZZTo4L', dir_name='ZZTo4L', ana_dir=analysis_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L.xSection, sumweights=ZZTo4L.nGenEvents),
@@ -82,7 +73,6 @@ def createSampleLists(analysis_dir='/afs/cern.ch/user/v/vstampf/work/public/prod
     samples = samples_essential + samples_additional + samples_data
     all_samples = samples_mc + samples_data
 
-    # weighted_list = ['W', 'W1Jets', 'W2Jets', 'W3Jets', 'W4Jets']
     weighted_list = []
 
     for sample in samples_mc:
