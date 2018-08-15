@@ -7,9 +7,9 @@ from math import log10, floor
 from ROOT import TCanvas, TPaveText, TBox, gStyle
 from CMGTools.RootTools.DataMC.Stack import Stack
 
-from CMGTools.H2TauTau.proto.plotter.CMS_lumi import CMS_lumi
+from CMGTools.HNL.plotter.CMS_lumi import CMS_lumi
 
-from CMGTools.H2TauTau.proto.plotter.officialStyle import officialStyle
+from CMGTools.HNL.plotter.officialStyle import officialStyle
 officialStyle(gStyle)
 
 def ensureDir(directory):
@@ -64,7 +64,7 @@ class HistDrawer:
     @staticmethod
     def datasetInfo(plot):
         year = ''
-        year = '2015'
+        year = '2017'
         lumi = plot.lumi/1000. if hasattr(plot, 'lumi') else 0.
         unit = plot.lumi_unit if hasattr(plot, 'lumi_unit') else 'fb'
         energy = plot.com_energy if hasattr(plot, 'com_energy') else 13
@@ -103,7 +103,7 @@ class HistDrawer:
     keeper = []
 
     @staticmethod
-    def draw(plot, do_ratio=True, channel='#mu#tau_{h}', plot_dir='plots', 
+    def draw(plot, do_ratio=False, channel='e#mu#mu', plot_dir='/afs/cern.ch/work/v/vstampf/plots/stacked/', 
              plot_name=None, SetLogy=0, 
              blindxmin=None, blindxmax=None, unit=None):
         print plot
@@ -111,10 +111,10 @@ class HistDrawer:
 
         can = pad = padr = None
 
-        if do_ratio:
-            can, pad, padr = HistDrawer.buildCanvas()
-        else:
-            can = HistDrawer.buildCanvasSingle()
+#        if do_ratio:
+        can, pad, padr = HistDrawer.buildCanvas()
+#        else:
+#            can = HistDrawer.buildCanvasSingle()
 
         pad.cd()
         pad.SetLogy(SetLogy)
@@ -133,6 +133,8 @@ class HistDrawer:
 
         h.GetYaxis().SetTitle('Events')
         h.GetYaxis().SetTitleOffset(1.0)
+#        h.GetXaxis().SetTitle(xtitle)
+#        print (xtitle)
         h.GetXaxis().SetTitleOffset(2.0)
 
         if do_ratio:
@@ -198,7 +200,7 @@ class HistDrawer:
         can.SaveAs(plotname + '_log.png')
         can.SaveAs(plotname + '_log.pdf')
         pad.SetLogy(0)
-        return ratio
+#        return ratio
 
     drawRatio = draw
 

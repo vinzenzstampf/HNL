@@ -97,7 +97,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             # plot.Group('Single t', ['T_tWch', 'TBar_tWch', 'TToLeptons_sch', 'TToLeptons_tch'])
 #            plot.Group('ZTT', ['ZTT', 'ZJ'], style=plot.Hist('ZTT').style)
             if make_plots:
-                HistDrawer.draw(plot, plot_dir='plots/'+cut.name)
+                HistDrawer.draw(plot, plot_dir='/afs/cern.ch/work/v/vstampf/plots/stacked/'+cut.name)
             if variable.name in ['mvis', 'svfit_transverse_mass', 'svfit_mass', 'mva', 'mva2div1', 'mva1', 'mva2', 'l2_nc_ratio']:
                 plot.WriteDataCard(filename='datacard_{mode}_{var}.root'.format(mode=mode, var=variable.name), dir='mt_' + cut.name, mode='UPDATE', postfix=dc_postfix) #mt = mu-tau
 #            for signal_hist in plot.SignalHists():
