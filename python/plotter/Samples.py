@@ -64,8 +64,10 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/bkg_mc_prompt_e/
 
     # FIXME
     samples_data = [
-#         SampleCfg(name='data', dir_name='ZZTo4L', ana_dir=analysis_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L.xSection, sumweights=ZZTo4L.nGenEvents,is_data=True),
-#         SampleCfg(name='data', dir_name='WZTo3LNu', ana_dir=analysis_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu.xSection, sumweights=WZTo3LNu.nGenEvents,is_data=True),
+        SampleCfg(name='Data', dir_name=DYJetsToLL_M50_ext.name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
+                  xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents, is_data=True),
+#         SampleCfg(name='Data', dir_name='ZZTo4L', ana_dir=analysis_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L.xSection, sumweights=ZZTo4L.nGenEvents,is_data=True),
+#         SampleCfg(name='Data', dir_name='WZTo3LNu', ana_dir=analysis_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu.xSection, sumweights=WZTo3LNu.nGenEvents,is_data=True),
 #         SampleCfg(name='fakedata(tt)', dir_name=TTJets_amcat.name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
 #                   xsec=TTJets_amcat.xSection, sumweights=TTJets_amcat.nGenEvents,is_data=True),
     ]

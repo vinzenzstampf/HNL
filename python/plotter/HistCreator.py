@@ -49,7 +49,8 @@ def createHistograms(hist_cfg, all_stack=False, verbose=False, friend_func=None,
             for vcfg in vcfgs:
                 hist = hists[vcfg.name]
                 plot = plots[vcfg.name]
-                hist._BuildStack(hist._SortedHistograms(), ytitle='Events')
+#                set_trace()
+                hist._BuildStack(hist._SortedHistograms(), xtitle=hist.GetXaxis().GetTitle(), ytitle='Events')
 
                 total_hist = plot.AddHistogram(cfg.name, hist.stack.totalHist.weighted, stack=True)
 
@@ -62,6 +63,7 @@ def createHistograms(hist_cfg, all_stack=False, verbose=False, friend_func=None,
                     total_hist.Scale(cfg.total_scale)
                     # print 'Scaling total', hist_cfg.name, 'by', cfg.total_scale
         else:
+#            set_trace()
             # It's a sample cfg
 
             # Now read the tree
