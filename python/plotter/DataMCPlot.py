@@ -8,7 +8,7 @@ from CMGTools.RootTools.DataMC.Histogram import Histogram
 from CMGTools.RootTools.DataMC.Stack import Stack
 
 from CMGTools.HNL.plotter.H2TauStyle import histPref, Style
-
+from pdb import set_trace
 
 def ymax(hists):
     def getmax(h):
@@ -422,6 +422,7 @@ class DataMCPlot(object):
 
             self.supportHist.GetYaxis().SetRangeUser(ymin, ymax)
             self.axisWasSet = True
+#        self.stack.totalHist.GetXaxis().SetTitle('asd')
         for hist in self.nostack:
             if self.blindminx and hist.style.drawAsData:
                 hist.Blind(self.blindminx, self.blindmaxx)
@@ -433,10 +434,13 @@ class DataMCPlot(object):
         if self.supportHist.weighted.GetMaximumBin() < self.supportHist.weighted.GetNbinsX()/2:
             self.legendBorders = 0.62, 0.46, 0.88, 0.89
             self.legendPos = 'right'
+        
+        self.stack._updateTitles(self.stack.totalHist) # FIXME DOESN"T WORK, although it should
 
         self.DrawLegend(print_norm=print_norm)
         if TPad.Pad():
             TPad.Pad().Update()
+#        set_trace()
 
     def DrawNormalizedStack(self, opt='',
                             xmin=None, xmax=None, ymin=0.001, ymax=None):

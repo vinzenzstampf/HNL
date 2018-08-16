@@ -4,19 +4,19 @@ from operator import itemgetter
 
 from numpy import array
 
-from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg, VariableCfg
-from CMGTools.HNL.plotter.categories_TauMu import cat_Inc
-from CMGTools.HNL.plotter.HistCreator import createHistograms, createTrees
-from CMGTools.HNL.plotter.HistDrawer import HistDrawer
-from CMGTools.HNL.plotter.Variables import taumu_vars, getVars
-from CMGTools.HNL.plotter.helper_methods import getVertexWeight
-from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
+from CMGTools.H2TauTau.proto.plotter.PlotConfigs import HistogramCfg, VariableCfg
+from CMGTools.H2TauTau.proto.plotter.categories_TauMu import cat_Inc
+from CMGTools.H2TauTau.proto.plotter.HistCreator import createHistograms, createTrees
+from CMGTools.H2TauTau.proto.plotter.HistDrawer import HistDrawer
+from CMGTools.H2TauTau.proto.plotter.Variables import taumu_vars, getVars
+from CMGTools.H2TauTau.proto.plotter.helper_methods import getVertexWeight
+from CMGTools.H2TauTau.proto.samples.spring16.htt_common import lumi, lumi_2016G
 
-# from CMGTools.HNL.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
-from CMGTools.HNL.plotter.defaultGroups import createDefaultGroups
+from CMGTools.H2TauTau.proto.plotter.qcdEstimationMSSMltau import estimateQCDWMSSM, createQCDWHistograms
+from CMGTools.H2TauTau.proto.plotter.defaultGroups import createDefaultGroups
 
-from CMGTools.HNL.plotter.Samples import createSampleLists
-from CMGTools.HNL.plotter.metrics import ams_hists
+from CMGTools.H2TauTau.proto.plotter.Samples import createSampleLists
+from CMGTools.H2TauTau.proto.plotter.metrics import ams_hists
 
 Cut = namedtuple('Cut', ['name', 'cut'])
 
@@ -291,8 +291,8 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
 if __name__ == '__main__':
         
     # mode = 'iso'
-    mode = 'sm'
-    # mode = 'mva'
+    # mode = 'sm'
+    mode = 'mva'
     # mode = 'cp'
     # mode = 'mssm_signal' 
     # mode = 'mssm_control'
@@ -341,37 +341,37 @@ if __name__ == '__main__':
         sample_dict, hist_dict = createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_method, r_qcd_os_ss)
         makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_same_sign, w_qcd_mssm_method, mt_cut, friend_func, dc_postfix='', create_trees=False)
 
-#    if add_ttbar_sys:
-#
-#        weight_ttbar_up = 'weight * gen_top_weight'
-#
-#        sample_dict, hist_dict = createSamples(mode, analysis_dir, weight_ttbar_up, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
-#
-#        sample_dict_ttbar = {'all_samples':[s for s in sample_dict['all_samples'] if s.name == 'TT']}
-#
-#        makePlots(variables, cuts, weight_ttbar_up, sample_dict_ttbar, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=friend_func, dc_postfix='_CMS_htt_ttbarShape_13TeVUp', make_plots=False)
-#
-#        weight_ttbar_down = 'weight / gen_top_weight'
-#
-#        sample_dict, hist_dict = createSamples(mode, analysis_dir, weight_ttbar_up, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
-#
-#        sample_dict_ttbar = {'all_samples':[s for s in sample_dict['all_samples'] if s.name == 'TT']}
-#
-#
-#        makePlots(variables, cuts, weight_ttbar_down, sample_dict_ttbar, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=friend_func, dc_postfix='_CMS_htt_ttbarShape_13TeVDown', make_plots=False)
+    if add_ttbar_sys:
 
-#    if add_tes_sys:
-#        tes_samples = ['ZTT', 'ZTTM10', 'HiggsGGH125', 'HiggsVBF125']
+        weight_ttbar_up = 'weight * gen_top_weight'
+
+        sample_dict, hist_dict = createSamples(mode, analysis_dir, weight_ttbar_up, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
+
+        sample_dict_ttbar = {'all_samples':[s for s in sample_dict['all_samples'] if s.name == 'TT']}
+
+        makePlots(variables, cuts, weight_ttbar_up, sample_dict_ttbar, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=friend_func, dc_postfix='_CMS_htt_ttbarShape_13TeVUp', make_plots=False)
+
+        weight_ttbar_down = 'weight / gen_top_weight'
+
+        sample_dict, hist_dict = createSamples(mode, analysis_dir, weight_ttbar_up, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
+
+        sample_dict_ttbar = {'all_samples':[s for s in sample_dict['all_samples'] if s.name == 'TT']}
+
+
+        makePlots(variables, cuts, weight_ttbar_down, sample_dict_ttbar, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=friend_func, dc_postfix='_CMS_htt_ttbarShape_13TeVDown', make_plots=False)
+
+    if add_tes_sys:
+        tes_samples = ['ZTT', 'ZTTM10', 'HiggsGGH125', 'HiggsVBF125']
 
         analysis_dir = '/data1/steggema/mt/070416/TauMuSVFitTESUp/'
         sample_dict, hist_dict = createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
         sample_dict_tes = {'all_samples':[s for s in sample_dict['all_samples'] if s.name in tes_samples]}
         makePlots(variables, cuts, total_weight, sample_dict_tes, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=lambda f: f.replace('TESUp', 'TESUpMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVUp', make_plots=False)
 
-#        analysis_dir = '/data1/steggema/mt/070416/TauMuSVFitTESDown/'
-#        sample_dict, hist_dict = createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
-#        sample_dict_tes = {'all_samples':[s for s in sample_dict['all_samples'] if s.name in tes_samples]}
+        analysis_dir = '/data1/steggema/mt/070416/TauMuSVFitTESDown/'
+        sample_dict, hist_dict = createSamples(mode, analysis_dir, total_weight, qcd_from_same_sign=False, w_qcd_mssm_method=False, r_qcd_os_ss=None)
+        sample_dict_tes = {'all_samples':[s for s in sample_dict['all_samples'] if s.name in tes_samples]}
 
-#        makePlots(variables, cuts, total_weight, sample_dict_tes, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=lambda f: f.replace('TESDown', 'TESDownMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVDown', make_plots=False)
+        makePlots(variables, cuts, total_weight, sample_dict_tes, hist_dict={}, qcd_from_same_sign=False, w_qcd_mssm_method=False, mt_cut=mt_cut, friend_func=lambda f: f.replace('TESDown', 'TESDownMultiMVA'), dc_postfix='_CMS_scale_t_mt_13TeVDown', make_plots=False)
 
 

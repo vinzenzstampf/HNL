@@ -20,7 +20,7 @@ from CMGTools.HNL.plotter.metrics import ams_hists
 
 Cut = namedtuple('Cut', ['name', 'cut'])
 
-int_lumi = 41000.0 #### FIXME 
+int_lumi = 41000.0 # pb #### FIXME 
 
 binning_mssm = array([0.,10.,20.,30.,40.,50.,60.,70.,80.,90.,100.,110.,120.,130.,140.,150.,160.,170.,180.,190.,200.,225.,250.,275.,300.,325.,350.,400.,500.,700.,900.,1100.,1300.,1500.,1700.,1900.,2100.,2300.,2500.,2700.,2900.,3100.,3300.,3500.,3700.,3900.])
 
@@ -45,7 +45,7 @@ def createSamples(analysis_dir, total_weight, qcd_from_same_sign, w_qcd_mssm_met
     hist_dict = {}
     sample_dict = {}
 #    set_trace()
-    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir)
+    samples_mc, samples_data, samples, all_samples, sampleDict = createSampleLists(analysis_dir=analysis_dir, no_data=True)
 
     sample_dict['all_samples'] = all_samples
 
@@ -97,7 +97,7 @@ def makePlots(variables, cuts, total_weight, sample_dict, hist_dict, qcd_from_sa
             # plot.Group('Single t', ['T_tWch', 'TBar_tWch', 'TToLeptons_sch', 'TToLeptons_tch'])
 #            plot.Group('ZTT', ['ZTT', 'ZJ'], style=plot.Hist('ZTT').style)
             if make_plots:
-                HistDrawer.draw(plot, plot_dir='/afs/cern.ch/work/v/vstampf/plots/stacked/'+cut.name)
+                HistDrawer.draw(plot, plot_dir='plots/'+cut.name)
             if variable.name in ['mvis', 'svfit_transverse_mass', 'svfit_mass', 'mva', 'mva2div1', 'mva1', 'mva2', 'l2_nc_ratio']:
                 plot.WriteDataCard(filename='datacard_{mode}_{var}.root'.format(mode=mode, var=variable.name), dir='mt_' + cut.name, mode='UPDATE', postfix=dc_postfix) #mt = mu-tau
 #            for signal_hist in plot.SignalHists():
@@ -136,7 +136,8 @@ if __name__ == '__main__':
 
     analysis_dir = '/eos/user/v/vstampf/ntuples/bkg_mc_prompt_e/' # input
 
-    total_weight = ''
+    total_weight = 'weight'
+# FIXME fix this 
 #    total_weight = 'weight * (1. - 0.0772790*(l2_gen_match == 5 && l2_decayMode==0) - 0.138582*(l2_gen_match == 5 && l2_decayMode==1) - 0.220793*(l2_gen_match == 5 && l2_decayMode==10) )' # Tau ID eff scale factor
 
     if data2016G:

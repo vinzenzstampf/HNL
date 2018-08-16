@@ -103,7 +103,7 @@ class HistDrawer:
     keeper = []
 
     @staticmethod
-    def draw(plot, do_ratio=False, channel='e#mu#mu', plot_dir='/afs/cern.ch/work/v/vstampf/plots/stacked/', 
+    def draw(plot, do_ratio=False, channel='e#mu#mu', plot_dir='/plots/', 
              plot_name=None, SetLogy=0, 
              blindxmin=None, blindxmax=None, unit=None):
         print plot

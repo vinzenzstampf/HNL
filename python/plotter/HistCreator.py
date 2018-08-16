@@ -9,6 +9,7 @@ from CMGTools.HNL.plotter.PlotConfigs import HistogramCfg
 from CMGTools.HNL.plotter.DataMCPlot import DataMCPlot
 
 from CMGTools.RootTools.DataMC.Histogram import Histogram
+from pdb import set_trace
 
 from ROOT import TH1F, TFile, TTree, TTreeFormula
 
@@ -147,6 +148,8 @@ def createHistograms(hist_cfg, all_stack=False, verbose=False, friend_func=None,
 
     for plot in plots.itervalues():
         plot._ApplyPrefs()
+        plot.Draw()
+#    set_trace()
     return plots
 
 
