@@ -7,7 +7,7 @@ from ROOT import TLegend, TLine, TPad, TFile, gROOT
 from CMGTools.RootTools.DataMC.Histogram import Histogram
 from CMGTools.RootTools.DataMC.Stack import Stack
 
-from CMGTools.HNL.plotter.H2TauStyle import histPref, Style
+from CMGTools.HNL.plotter.HNLStyle import histPref, Style
 from pdb import set_trace
 
 def ymax(hists):
@@ -385,9 +385,7 @@ class DataMCPlot(object):
 
         if Histogram.stack is True, the histogram is put in the stack.
         scale_signal: mc_int -> scale to stack integral'''
-#        set_trace()
-        self._BuildStack(self._SortedHistograms(), xtitle=self._SortedHistograms()[0].obj.GetXaxis().GetTitle(), ytitle='Events')
-#        self.stack._updateTitles(self.stack.totalHist) # FIXME DOESN"T WORK, although it should
+        self._BuildStack(self._SortedHistograms(), ytitle='Events')
         same = 'same'
         if len(self.nostack) == 0:
             same = ''
@@ -401,7 +399,6 @@ class DataMCPlot(object):
                 hist.Draw('SAME HIST' if self.supportHist else 'HIST')
             if not self.supportHist:
                 self.supportHist = hist
-#        set_trace()
         self.stack.Draw(opt+same,
                         xmin=xmin, xmax=xmax,
                         ymin=ymin, ymax=ymax)
@@ -425,8 +422,6 @@ class DataMCPlot(object):
 
             self.supportHist.GetYaxis().SetRangeUser(ymin, ymax)
             self.axisWasSet = True
-#        self.stack.totalHist.GetXaxis().SetTitle('asd')
-#        set_trace()
         for hist in self.nostack:
             if self.blindminx and hist.style.drawAsData:
                 hist.Blind(self.blindminx, self.blindmaxx)
@@ -498,12 +493,12 @@ class DataMCPlot(object):
             hist.weighted.Write(hist.name + postfix)
         outf.Write()
 
-    def _BuildStack(self, hists, xtitle=None, ytitle=None):
+    def _BuildStack(self, hists, ytitle=None):
         '''build a stack from a list of Histograms.
 
         The histograms for which Histogram.stack is False are put in self.nostack'''
         self.stack = None
-        self.stack = Stack(self.name+'_stack', xtitle=xtitle, ytitle=ytitle)
+        self.stack = Stack(self.name+'_stack', ytitle=ytitle)
         self.nostack = []
         for hist in hists:
             if hist.stack:

@@ -111,10 +111,10 @@ class HistDrawer:
 
         can = pad = padr = None
 
-#        if do_ratio:
-        can, pad, padr = HistDrawer.buildCanvas()
-#        else:
-#            can = HistDrawer.buildCanvasSingle()
+        if do_ratio:
+            can, pad, padr = HistDrawer.buildCanvas()
+        else:
+            can = HistDrawer.buildCanvasSingle()
 
         pad.cd()
         pad.SetLogy(SetLogy)
@@ -133,8 +133,6 @@ class HistDrawer:
 
         h.GetYaxis().SetTitle('Events')
         h.GetYaxis().SetTitleOffset(1.0)
-#        h.GetXaxis().SetTitle(xtitle)
-#        print (xtitle)
         h.GetXaxis().SetTitleOffset(2.0)
 
         if do_ratio:
