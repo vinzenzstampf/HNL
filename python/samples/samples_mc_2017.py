@@ -7,8 +7,6 @@ from CMGTools.RootTools.samples.ComponentCreator import ComponentCreator
 
 creator = ComponentCreator()
 
-# FIXME! put the right cross sections
-# FIXME! check in ComponentCreator how to cache the file fetching
 # FIXME! create meaningful lists
 
 TTJets_amcat                    = creator.makeMyPrivateMCComponent('TTJets_amcat'                  , '/TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8/vstampf-HNLSKIM2017_TTJets_TuneCP5_13TeV-amcatnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                         , 'PRIVATE', '*.root', 'phys03', xSec=831.76, useAAA=True)
@@ -86,16 +84,16 @@ W4JetsToLNu                     = creator.makeMyPrivateMCComponent('W4JetsToLNu'
 
 hnl_bkg = [
     TTJets_amcat                  ,
-    TTJets_mdgrph                 ,
+#    TTJets_mdgrph                 ,
  
-    DYJetsToLL_M50                ,
+#    DYJetsToLL_M50                ,
     DYJetsToLL_M50_ext            ,
 
-    WLLJJ_WToLNu_EWK              ,
-    WW_DoubleScattering           ,
+#    WLLJJ_WToLNu_EWK              ,
+#    WW_DoubleScattering           ,
     WZTo3LNu                      ,
     ZZTo4L                        ,
-    ZZTo4L_ext                    ,
+#    ZZTo4L_ext                    ,
 
     WJetsToLNu                    ,
 #    WJetsToLNu_HT400To600         ,
@@ -112,7 +110,14 @@ hnl_bkg = [
 #    W2JetsToLNu_LHEWpT_250_400    ,
 #    W2JetsToLNu_LHEWpT_400_inf    ,
  
-    W3JetsToLNu                   ,
-    W4JetsToLNu                   ,
+#    W3JetsToLNu                   ,
+#    W4JetsToLNu                   ,
 ] 
 
+hnl_bkg_essential = [
+    TTJets_amcat                  ,
+    DYJetsToLL_M50_ext            ,
+    WZTo3LNu                      ,
+    ZZTo4L                        ,
+    WJetsToLNu                    ,
+]
