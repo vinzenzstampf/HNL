@@ -46,6 +46,9 @@ ZZTo4L_ext                      = creator.makeMyPrivateMCComponent('ZZTo4L_ext' 
 ZZTo4L_ext          .nGenEvents = 98009599
 #.sigma = 1.256 pb
 
+WJetsToLNu                      = creator.makeMyPrivateMCComponent('WJetsToLNu'                    , '/WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'                                  , 'PRIVATE', '*.root', 'phys03', xSec=20508.9*3, useAAA=True)
+# WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.sigma = 20508.9*3 pb
+ 
 WJetsToLNu_HT400To600           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT400To600'         , '/WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-400To600_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', xSec=48.91, useAAA=True)
 #.sigma = 48.91 \pm 0.072 pb (LO); .nevents = 5572699 
 WJetsToLNu_HT600To800           = creator.makeMyPrivateMCComponent('WJetsToLNu_HT600To800'         , '/WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-600To800_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'          , 'PRIVATE', '*.root', 'phys03', xSec=12.05, useAAA=True)
@@ -54,8 +57,7 @@ WJetsToLNu_HT800To1200          = creator.makeMyPrivateMCComponent('WJetsToLNu_H
 #.sigma = 5.501 \pm 0.017 pb (LO); .nevents = 8675292 
 WJetsToLNu_HT1200To2500         = creator.makeMyPrivateMCComponent('WJetsToLNu_HT1200To2500'       , '/WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8/lshchuts-HNLSKIM2017_WJetsToLNu_HT-1200To2500_TuneCP5_13TeV-madgraphMLM-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'      , 'PRIVATE', '*.root', 'phys03', xSec=1.329, useAAA=True)
 #.sigma = 1.329 \pm 0.0025 pb (LO); .nevents = 5696067 
-# WJetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8.sigma = 20508.9*3 pb
- 
+
 W1JetsToLNu_LHEWpT_250_400      = creator.makeMyPrivateMCComponent('W1JetsToLNu_LHEWpT_250_400'    , '/W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8/lshchuts-HNLSKIM2017_W1JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'    , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 #.sigma = NOT FOUND pb; .nevents = 11545472 
 W1JetsToLNu_LHEWpT_400_inf      = creator.makeMyPrivateMCComponent('W1JetsToLNu_LHEWpT_400_inf'    , '/W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8/lshchuts-HNLSKIM2017_W1JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'    , 'PRIVATE', '*.root', 'phys03', useAAA=True)
@@ -67,6 +69,8 @@ W2JetsToLNu_LHEWpT_50_150       = creator.makeMyPrivateMCComponent('W2JetsToLNu_
 #.sigma = NOT FOUND pb; .nevents = 10755628 
 W2JetsToLNu_LHEWpT_100_150      = creator.makeMyPrivateMCComponent('W2JetsToLNu_LHEWpT_100_150'    , '/W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8/lshchuts-HNLSKIM2017_W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'    , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 #.sigma = NOT FOUND pb; .nevents = 14264210 
+W2JetsToLNu_LHEWpT_100_150_ext  = creator.makeMyPrivateMCComponent('W2JetsToLNu_LHEWpT_100_150_ext', '/W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8/lshchuts-HNLSKIM2017_W2JetsToLNu_LHEWpT_100-150_TuneCP5_13TeV-amcnloFXFX-pythia8_ext-115d0bad8e8ff59118d83f903524e0b3/USER'    , 'PRIVATE', '*.root', 'phys03', useAAA=True)
+#.sigma = NOT FOUND pb;
 W2JetsToLNu_LHEWpT_250_400      = creator.makeMyPrivateMCComponent('W2JetsToLNu_LHEWpT_250_400'    , '/W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8/lshchuts-HNLSKIM2017_W2JetsToLNu_LHEWpT_250-400_TuneCP5_13TeV-amcnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'    , 'PRIVATE', '*.root', 'phys03', useAAA=True)
 #.sigma = NOT FOUND pb; .nevents = 38515628
 W2JetsToLNu_LHEWpT_400_inf      = creator.makeMyPrivateMCComponent('W2JetsToLNu_LHEWpT_400_inf'    , '/W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8/lshchuts-HNLSKIM2017_W2JetsToLNu_LHEWpT_400-inf_TuneCP5_13TeV-amcnloFXFX-pythia8-115d0bad8e8ff59118d83f903524e0b3/USER'    , 'PRIVATE', '*.root', 'phys03', useAAA=True)
@@ -93,6 +97,7 @@ hnl_bkg = [
     ZZTo4L                        ,
     ZZTo4L_ext                    ,
 
+    WJetsToLNu                    ,
 #    WJetsToLNu_HT400To600         ,
 #    WJetsToLNu_HT600To800         ,
 #    WJetsToLNu_HT800To1200        ,

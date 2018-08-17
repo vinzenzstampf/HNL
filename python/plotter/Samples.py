@@ -8,7 +8,7 @@ from CMGTools.HNL.plotter.PlotConfigs import SampleCfg, HistogramCfg
 #from CMGTools.HNL.samples.spring16.sms_xsec import get_xsec
 
 from CMGTools.HNL.samples.samples_mc_2017 import hnl_bkg
-from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat, TTJets_mdgrph, DYJetsToLL_M50, DYJetsToLL_M50_ext, W3JetsToLNu, W4JetsToLNu, WLLJJ_WToLNu_EWK, WW_DoubleScattering, WZTo3LNu, ZZTo4L, ZZTo4L_ext
+from CMGTools.HNL.samples.samples_mc_2017 import TTJets_amcat, TTJets_mdgrph, DYJetsToLL_M50, DYJetsToLL_M50_ext, WJetsToLNu, W3JetsToLNu, W4JetsToLNu, WLLJJ_WToLNu_EWK, WW_DoubleScattering, WZTo3LNu, ZZTo4L, ZZTo4L_ext
 
 if "/sDYReweighting_cc.so" not in gSystem.GetLibraries(): 
     gROOT.ProcessLine(".L %s/src/CMGTools/HNL/python/plotter/DYReweighting.cc+" % os.environ['CMSSW_BASE']);
@@ -57,16 +57,19 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/bkg_mc_prompt_e/
 
     samples_essential = [
         SampleCfg(name='DYJets'              , dir_name=DYJetsToLL_M50      .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
-                  xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50   .nGenEvents),
+                  xsec=DYJetsToLL_M50     .xSection, sumweights=DYJetsToLL_M50     .nGenEvents),
 
         SampleCfg(name='DYJets_ext'          , dir_name=DYJetsToLL_M50_ext  .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
-                  xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents),
+                  xsec=DYJetsToLL_M50_ext .xSection, sumweights=DYJetsToLL_M50_ext .nGenEvents),
 
         SampleCfg(name='TTJets_amc'          , dir_name=TTJets_amcat        .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
-                  xsec=TTJets_amcat       .xSection, sumweights=TTJets_amcat     .nGenEvents),
+                  xsec=TTJets_amcat       .xSection, sumweights=TTJets_amcat       .nGenEvents),
 
         SampleCfg(name='TTJets_mdg'          , dir_name=TTJets_mdgrph       .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
-                  xsec=TTJets_mdgrph      .xSection, sumweights=TTJets_mdgrph    .nGenEvents),
+                  xsec=TTJets_mdgrph      .xSection, sumweights=TTJets_mdgrph      .nGenEvents),
+
+#        SampleCfg(name='WJetsToLNu'          , dir_name=WJetsToLNu          .name, ana_dir=analysis_dir, tree_prod_name=tree_prod_name,
+#                  xsec=WJetsToLNu         .xSection, sumweights=WJetsToLNu         .nGenEvents),        
         ]
 
     # FIXME
