@@ -75,7 +75,7 @@ class HNLGenTreeAnalyzer(Analyzer):
         except: 
             print('\t<< event.the_hn.neu  = [ii for ii in event.the_hn.initialdaus if abs(ii.pdgId()) in [12, 14]][0] >> crashes\n\tevent:',event.eventId, event.run, event.lumi)
             self.counters.counter('HNLGenTree').inc('bad events')
-#            set_trace()
+            set_trace()
             return False  # FIXME there is some problem with the line above in the new signal samples
 
         # identify the secondary vertex

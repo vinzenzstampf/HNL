@@ -20,21 +20,25 @@ from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 # import HNL analyzers:
 from CMGTools.HNL.analyzers.HNLAnalyzer        import HNLAnalyzer
 from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
-#from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
-from CMGTools.HNL.analyzers.HNLGenTreeAnalyzerDebug import HNLGenTreeAnalyzer # FIXME UNDO THIS FOR NON DEBUG
+from CMGTools.HNL.analyzers.RecoGenAnalyzer    import RecoGenAnalyzer
+from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
 from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
 from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
+from CMGTools.HNL.analyzers.METFilter          import METFilter
 from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
 
 # import samples, signal
 # from CMGTools.HNL.samples.localsignal import HN3L_M_2p5_V_0p0173205080757_e_onshell, HN3L_M_2p5_V_0p00707106781187_e_onshell
-# from CMGTools.HNL.samples.localsignal import TTJets_amcat as ttbar
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50, DYJetsToLL_M50_ext, DYBB#, WJetsToLNu, WJetsToLNu_ext, TTJets 
 # from CMGTools.HNL.samples.samples_mc_2017 import DYJetsToLL_M50, hnl_bkg_essentials
-#from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M5to50
-# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
-# from CMGTools.HNL.samples.signal import all_signals_e
-from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p022360679775_e_massiveAndCKM_LO as checksample
-samples = [checksample]
+# from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M10to50
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import DYJetsToLL_M50
+from CMGTools.HNL.samples.signal import all_signals_e as samples
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_mu as samples
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import qcd_e
+#from CMGTools.HNL.samples.samples_mc_2017_noskim import wjets as samples
+from CMGTools.HNL.samples.signal_old import HN3L_M_2p5_V_0p00707106781187_e_onshell as sasd
+#samples = [sasd]
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -42,15 +46,20 @@ samples = [checksample]
 # Get all heppy options; set via "-o production" or "-o production=True"
 # production = True run on batch, production = False (or unset) run locally
 
-production         = getHeppyOption('production' , False)
+production         = getHeppyOption('production' , True)
 # production         = getHeppyOption('production' , False)
-pick_events        = getHeppyOption('pick_events', True)
+pick_events        = getHeppyOption('pick_events', False)
 
 ###################################################
 ###               HANDLE SAMPLES                ###
 ###################################################
 #samples = hnl_bkg_essentials
-#samples = [DYJetsToLL_M5to50]
+#samples = [DYJetsToLL_M50]
+#samples = qcd_mu
+#samples = signals_e
+#samples = [DYJetsToLL_M10to50]
+#samples = [TTJets]
+#samples = [DYJetsToLL_M10to50, DYJetsToLL_M50, DYBB, DYJetsToLL_M50_ext, DYJetsToLL_M10to50_ext]
 auxsamples = [] #[ttbar, DYJetsToLL_M50]
 
 #samples = [comp for comp in samples if comp.name=='TTJets_amcat']
@@ -62,7 +71,7 @@ for sample in samples+auxsamples:
     sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
     sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
 
-    sample.splitFactor = splitFactor(sample, 1e5)
+    sample.splitFactor = splitFactor(sample, 5e4)
 
 selectedComponents = samples
 
@@ -72,7 +81,7 @@ selectedComponents = samples
 eventSelector = cfg.Analyzer(
     EventSelector,
     name='EventSelector',
-    toSelect=[109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,109,206,541,759,836,]
+    toSelect=[109,541,759,836,206,]
 )
 
 lheWeightAna = cfg.Analyzer(
@@ -88,6 +97,11 @@ jsonAna = cfg.Analyzer(
 skimAna = cfg.Analyzer(
     SkimAnalyzerCount,
     name='SkimAnalyzerCount'
+)
+
+recoGenAna = cfg.Analyzer(
+    RecoGenAnalyzer,
+    name='RecoGenAnalyzer',
 )
 
 triggerAna = cfg.Analyzer(
@@ -111,6 +125,23 @@ pileUpAna = cfg.Analyzer(
     PileUpAnalyzer,
     name='PileUpAnalyzer',
     true=True
+)
+
+metFilter = cfg.Analyzer(
+    METFilter,
+    name='METFilter',
+    processName='RECO',
+    triggers=[
+        'Flag_goodVertices',
+        'Flag_globalSuperTightHalo2016Filter',
+        'Flag_HBHENoiseFilter',
+        'Flag_HBHENoiseIsoFilter',
+        'Flag_EcalDeadCellTriggerPrimitiveFilter',
+        'Flag_BadPFMuonFilter',
+        'Flag_BadChargedCandidateFilter',
+        'Flag_eeBadScFilter',
+        'Flag_ecalBadCalibFilter',
+    ]
 )
 
 genAna = GeneratorAnalyzer.defaultConfig
@@ -147,6 +178,34 @@ eleWeighter = cfg.Analyzer(
     disable=False
 )
 
+muonWeighterl1 = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_disp_mu_1',
+    scaleFactorFiles={
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l1(),
+    disable=True
+)
+
+muonWeighterl2 = cfg.Analyzer(
+    LeptonWeighter,
+    name='LeptonWeighter_disp_mu_2',
+    scaleFactorFiles={
+        'idiso'   :('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_id'),
+        'tracking':('$CMSSW_BASE/src/CMGTools/HNL/data/leptonsf/htt_scalefactors_v17_1.root', 'm_iso'),
+    },
+    dataEffFiles={
+        # 'trigger':('$CMSSW_BASE/src/CMGTools/H2TauTau/data/htt_scalefactors_v16_2.root', 'm_trgIsoMu22orTkIsoMu22_desy'),
+    },
+    getter = lambda event : event.the_3lep_cand.l2(),
+    disable=True
+)
+
 HNLTreeProducer = cfg.Analyzer(
     HNLTreeProducer,
     name='HNLTreeProducer',
@@ -181,19 +240,23 @@ jetAna = cfg.Analyzer(
 ###                  SEQUENCE                   ###
 ###################################################
 sequence = cfg.Sequence([
-     eventSelector,
+#    eventSelector,
     lheWeightAna, # les houches
     jsonAna,
-#    skimAna,
+    skimAna,
     triggerAna,
     vertexAna,
-#    pileUpAna,
+    pileUpAna,
     genAna,
-#    HNLGenTreeAnalyzer,
+    HNLGenTreeAnalyzer,
     HNLAnalyzer,
-#    eleWeighter,
-#    jetAna,
-#    HNLTreeProducer,
+    eleWeighter,
+    muonWeighterl1,
+    muonWeighterl2,
+    jetAna,
+    recoGenAna,
+    metFilter,
+    HNLTreeProducer,
 ])
 
 ###################################################
@@ -202,13 +265,12 @@ sequence = cfg.Sequence([
 if not production:
 #     comp                 = HN3L_M_2p5_V_0p0173205080757_e_onshell
 #    comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
-#    comp                 = DYJetsToLL_M5to50
     comp                 = samples[0]
+#     comp                 = ttbar
     selectedComponents   = [comp]
     comp.splitFactor     = 1
     comp.fineSplitFactor = 1
-#    comp.files           = ['root://cms-xrd-global.cern.ch//store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/60000/CEC615FD-9564-E811-B685-FA163E842C05.root',
-# 'root://cms-xrd-global.cern.ch//store/mc/RunIIFall17MiniAODv2/DYJetsToLL_M-5to50_TuneCP5_13TeV-madgraphMLM-pythia8/MINIAODSIM/PU2017_12Apr2018_94X_mc2017_realistic_v14-v2/60000/563A3365-B564-E811-88F9-FA163E015DED.root']
+    comp.files           = comp.files[:50]
 
 # the following is declared in case this cfg is used in input to the
 # heppy.py script
