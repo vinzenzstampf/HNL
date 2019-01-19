@@ -1,4 +1,4 @@
-def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isData, isSignal):
+def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isData, isSignal, isGEN):
     import os
     from collections import OrderedDict
     import PhysicsTools.HeppyCore.framework.config as cfg
@@ -344,6 +344,22 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
                 metFilter,
                 HNLTreeProducer,
             ])
+            if isGEN == True:
+            sequence = cfg.Sequence([
+            #     eventSelector,
+                lheWeightAna, # les houches
+                jsonAna,
+                skimAna,
+                triggerAna,
+                vertexAna,
+                pileUpAna,
+                genAna,
+                HNLGenTreeAnalyzer,
+                RecoGenAnalyzer,
+                jetAna,
+                HNLGenTreeProducer,
+            ])
+
         if isSignal == False:
             sequence = cfg.Sequence([
             #     eventSelector,
