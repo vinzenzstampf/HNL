@@ -217,9 +217,6 @@ class HNLTreeProducer(TreeProducerBase):
             self.fill(self.tree, 'hlt_IsoMu27'                          , any('HLT_IsoMu27'                           in name for name in trig_list))
             self.fill(self.tree, 'hlt_Mu50'                             , any('HLT_Mu50'                              in name for name in trig_list))
 
-        # jet/met variables
-        self.fillExtraMetInfo(self.tree, event)
-
 #               if len(event.cleanJets )>0: self.fillJet(self.tree, 'j1' , event.cleanJets [0], fill_extra=False)
         if len(event.cleanJets )>1: self.fillJet(self.tree, 'j2' , event.cleanJets [1], fill_extra=False)
         if len(event.cleanBJets)>0: self.fillJet(self.tree, 'bj1', event.cleanBJets[0], fill_extra=False)

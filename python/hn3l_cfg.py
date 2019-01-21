@@ -19,14 +19,18 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     from CMGTools.H2TauTau.proto.analyzers.TriggerAnalyzer   import TriggerAnalyzer
 
     # import HNL analyzers:
-    from CMGTools.HNL.analyzers.HNLAnalyzer        import HNLAnalyzer
-    from CMGTools.HNL.analyzers.HNLTreeProducer    import HNLTreeProducer
-    from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer import HNLGenTreeAnalyzer
-    from CMGTools.HNL.analyzers.RecoGenAnalyzer    import RecoGenAnalyzer
-    from CMGTools.HNL.analyzers.TriggerAnalyzer    import TriggerAnalyzer
-    from CMGTools.HNL.analyzers.JetAnalyzer        import JetAnalyzer
-    from CMGTools.HNL.analyzers.METFilter          import METFilter
-    from CMGTools.HNL.analyzers.LeptonWeighter     import LeptonWeighter
+    if isGEN == False:
+        from CMGTools.HNL.analyzers.HNLAnalyzer           import HNLAnalyzer
+        from CMGTools.HNL.analyzers.HNLTreeProducer       import HNLTreeProducer
+    if isGEN == True:
+        from CMGTools.HNL.analyzers.HNLGenAnalyzer        import HNLAnalyzer
+        from CMGTools.HNL.analyzers.HNLGenTreeProducer    import HNLTreeProducer
+    from CMGTools.HNL.analyzers.HNLGenTreeAnalyzer        import HNLGenTreeAnalyzer
+    from CMGTools.HNL.analyzers.RecoGenAnalyzer           import RecoGenAnalyzer
+    from CMGTools.HNL.analyzers.TriggerAnalyzer           import TriggerAnalyzer
+    from CMGTools.HNL.analyzers.JetAnalyzer               import JetAnalyzer
+    from CMGTools.HNL.analyzers.METFilter                 import METFilter
+    from CMGTools.HNL.analyzers.LeptonWeighter            import LeptonWeighter
     from pdb import set_trace
 
     ###################################################
@@ -345,20 +349,20 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
                 HNLTreeProducer,
             ])
             if isGEN == True:
-            sequence = cfg.Sequence([
-            #     eventSelector,
-                lheWeightAna, # les houches
-                jsonAna,
-                skimAna,
-                triggerAna,
-                vertexAna,
-                pileUpAna,
-                genAna,
-                HNLGenTreeAnalyzer,
-                RecoGenAnalyzer,
-                jetAna,
-                HNLGenTreeProducer,
-            ])
+                sequence = cfg.Sequence([
+                #     eventSelector,
+                    lheWeightAna, # les houches
+                    jsonAna,
+                    skimAna,
+                    triggerAna,
+                    vertexAna,
+                    pileUpAna,
+                    genAna,
+                    HNLGenTreeAnalyzer,
+                    RecoGenAnalyzer,
+                    jetAna,
+                    HNLTreeProducer,
+                ])
 
         if isSignal == False:
             sequence = cfg.Sequence([
