@@ -41,8 +41,8 @@ class RecoGenAnalyzer(Analyzer):
         self.handles  ['photons'    ] = AutoHandle(('slimmedPhotons'               , '', 'PAT' ), 'std::vector<pat::Photon>'                      )
         self.handles  ['taus'       ] = AutoHandle(('slimmedTaus'                  , '', 'PAT' ), 'std::vector<pat::Tau>'                         )
         self.handles  ['jets'       ] = AutoHandle(('slimmedJets'                  , '', 'PAT' ), 'std::vector<pat::Jet>'                         )
-        self.handles  ['dsmuons'    ] = AutoHandle(('displacedStandAloneMuons'     , '', 'RECO'), 'std::vector<reco::Track>'                      )
-        self.handles  ['dgmuons'    ] = AutoHandle(('displacedGlobalMuons'         , '', 'RECO'), 'std::vector<reco::Track>'                      )
+        # self.handles  ['dsmuons'    ] = AutoHandle(('displacedStandAloneMuons'     , '', 'RECO'), 'std::vector<reco::Track>'                      )
+        # self.handles  ['dgmuons'    ] = AutoHandle(('displacedGlobalMuons'         , '', 'RECO'), 'std::vector<reco::Track>'                      )
         self.handles  ['pvs'        ] = AutoHandle(('offlineSlimmedPrimaryVertices', '', 'PAT' ), 'std::vector<reco::Vertex>'                     )
         self.handles  ['svs'        ] = AutoHandle(('slimmedSecondaryVertices'     , '', 'PAT' ), 'std::vector<reco::VertexCompositePtrCandidate>')
         self.handles  ['beamspot'   ] = AutoHandle(('offlineBeamSpot'              , '', 'RECO'), 'reco::BeamSpot'                                )
@@ -77,8 +77,8 @@ class RecoGenAnalyzer(Analyzer):
         event.photons     = map(Photon       , self.handles  ['photons'    ].product())
         event.taus        = map(Tau          , self.handles  ['taus'       ].product())
         event.jets        = map(Jet          , self.handles  ['jets'       ].product())
-        event.dsmuons     = self.buildDisplacedMuons(self.handles['dsmuons'].product())
-        event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons'].product())
+#        event.dsmuons     = self.buildDisplacedMuons(self.handles['dsmuons'].product())
+#        event.dgmuons     = self.buildDisplacedMuons(self.handles['dgmuons'].product())
 
         # vertex stuff
         event.pvs         = self.handles['pvs'     ].product()
@@ -148,18 +148,18 @@ class RecoGenAnalyzer(Analyzer):
                     # ip.besttau = match
             
             # matches the corresponding "displaced stand alone muon" to the gen particle
-            if len(event.dsmuons):
-                dr2 = np.inf
-                match, dr2 = bestMatch(ip,event.dsmuons)
-                if dr2 < dr_cut * dr_cut: 
-                    ip.bestdsmuon = match
+            # if len(event.dsmuons):
+            #     dr2 = np.inf
+            #     match, dr2 = bestMatch(ip,event.dsmuons)
+            #     if dr2 < dr_cut * dr_cut: 
+            #         ip.bestdsmuon = match
                     
             # matches the corresponding "displaced global muon" to the gen particle
-            if len(event.dgmuons):
-                dr2 = np.inf
-                match, dr2 = bestMatch(ip,event.dgmuons)
-                if dr2 < dr_cut * dr_cut: 
-                    ip.bestdgmuon = match
+            # if len(event.dgmuons):
+            #     dr2 = np.inf
+            #     match, dr2 = bestMatch(ip,event.dgmuons)
+            #     if dr2 < dr_cut * dr_cut: 
+            #         ip.bestdgmuon = match
             
             # to find the best match, give precedence to any matched 
             # particle in the matching cone with the correct PDG ID
@@ -182,7 +182,7 @@ class RecoGenAnalyzer(Analyzer):
 
             else:
                 ip.bestmatchtype = -1 
-    
+
         # clear it before doing it again
         event.recoSv = None
 

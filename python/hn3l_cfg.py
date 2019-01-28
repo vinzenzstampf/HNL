@@ -69,8 +69,44 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     eventSelector = cfg.Analyzer(
         EventSelector,
         name='EventSelector',
-        toSelect=[326]
+        toSelect=[11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,
+                  11944316, 18376537, 14677606, 2630454, 7011392, 8928691, 2606968, 18746551, 6170288,]
     )
+
+# t.Scan('event:lumi:run:l2_simType:l2_gen_match_pdgid:l2_simFlavour:l2_gen_match_isPromptFinalState:l2_gen_match_fromHardProcessFinalState:
+#         l2_gen_match_isDirectPromptTauDecayProductFinalState:l2_gen_match_isDirectHardProcessTauDecayProductFinalState:l2_gen_match_status',
+#         l2_fake_m_dr+' & '+l2_prompt_m_sh+' & abs(l1_dz) < 2 & abs(l2_dz) < 2 & hnl_2d_disp > 0.5 &'+ TIGHT_MMM)
+# ************************************************************************************************************************************************
+# *    Row   *     event *      lumi *       run * l2_simTyp * l2_gen_ma * l2_simFla * l2_gen_ma * l2_gen_ma * l2_gen_ma * l2_gen_ma * l2_gen_ma *
+# ************************************************************************************************************************************************
+# *    24147 *  18376537 *     23301 *         1 *         4 *       -99 *        13 *       -99 *       -99 *       -99 *       -99 *       -99 *
+# *    34032 *  14677606 *     18611 *         1 *         4 *       -99 *        13 *       -99 *       -99 *       -99 *       -99 *       -99 *
+# *    51377 *   7011392 *      8890 *         1 *         4 *       -99 *        13 *       -99 *       -99 *       -99 *       -99 *       -99 *
+# *    72150 *   8928691 *     11321 *         1 *         4 *       -99 *        13 *       -99 *       -99 *       -99 *       -99 *       -99 *
+# *    81202 *   2606968 *      3306 *         1 *         4 *       -99 *        13 *       -99 *       -99 *       -99 *       -99 *       -99 *
+# *   158797 *  18746551 *     23770 *         1 *         4 *        22 *        13 *         1 *         0 *         0 *         0 *         1 *
+# *   211289 *   6170288 *      6687 *         1 *         4 *       -99 *        13 *       -99 *       -99 *       -99 *       -99 *       -99 *
+# ************************************************************************************************************************************************
+# t.Scan('event:lumi:run:l1_simType:l1_gen_match_pdgid:l1_simFlavour:l1_gen_match_isPromptFinalState:l1_gen_match_fromHardProcessFinalState:
+#        l1_gen_match_isDirectPromptTauDecayProductFinalState:l1_gen_match_isDirectHardProcessTauDecayProductFinalState:l1_gen_match_status',
+#        l1_fake_m_dr+' & '+l1_prompt_m_sh+' & abs(l1_dz) < 2 & abs(l2_dz) < 2 & hnl_2d_disp > 0.5 &'+ TIGHT_MMM)
+# ************************************************************************************************************************************************
+# *    Row   *     event *      lumi *       run * l1_simTyp * l1_gen_ma * l1_simFla * l1_gen_ma * l1_gen_ma * l1_gen_ma * l1_gen_ma * l1_gen_ma *
+# ************************************************************************************************************************************************
+# *    72743 *  11944316 *     15145 *         1 *         4 *       -99 *        13 *       -99 *       -99 *       -99 *       -99 *       -99 *
+# *    81278 *   2630454 *      3335 *         1 *         3 *       -13 *        15 *         0 *         0 *         0 *         0 *         1 *
+# ************************************************************************************************************************************************
 
     lheWeightAna = cfg.Analyzer(
         LHEWeightAnalyzer, name="LHEWeightAnalyzer",
@@ -335,7 +371,6 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
                 pileUpAna,
                 genAna,
                 HNLGenTreeAnalyzer,
-                # RecoGenAnalyzer,
                 HNLAnalyzer,
                 Weighter_l0, 
                 Weighter_l1, 
@@ -346,7 +381,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             ])
         if isSignal == False:
             sequence = cfg.Sequence([
-            #     eventSelector,
+                # eventSelector,
                 lheWeightAna, # les houches
                 jsonAna,
                 skimAna,
@@ -372,7 +407,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     #     comp                 = HN3L_M_2p5_V_0p00707106781187_e_onshell
         # comp                 = all_signals_e[0]
         # comp                 = DYJetsToLL_M50
-        comp                 = samples[0]
+        comp                   = samples[1]
         # comp                 = samples
     #     comp                 = ttbar
         # comp                 = bkg
