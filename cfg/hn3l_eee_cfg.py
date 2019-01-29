@@ -8,9 +8,9 @@ from CMGTools.HNL.hn3l_cfg import *
 # from CMGTools.HNL.samples.samples_data_2017_noskim import  Single_ele_2017B
 # from CMGTools.HNL.samples.localsignal import  TTJets_amcat
 from CMGTools.HNL.samples.samples_mc_2017        import TTJets_amcat, WJetsToLNu
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50_ext, WJetsToLNu_ext
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WJetsToLNu_ext
 # samples = [Single_ele_2017B,Single_ele_2017C,Single_ele_2017D,Single_ele_2017E,Single_ele_2017F]
-samples = [DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M10to50_ext, DYJetsToLL_M50_ext]
+samples = [DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext]
 samples = [DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, TTJets_amcat, WJetsToLNu, WJetsToLNu_ext, DYJetsToLL_M50_ext]
 
 # edit the lines here to specify your ntuple production mode 
