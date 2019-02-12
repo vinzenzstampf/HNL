@@ -9,11 +9,12 @@ from CMGTools.HNL.samples.samples_data_2017_noskim import Single_ele_2017, Singl
 
 
 samples = [Single_ele_2017F]
-# samples =[sample]
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext
+samples = [DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext]
 
 # edit the lines here to specify your ntuple production mode 
 production         = True # state whether you're running production mode or not
-isData             = True
+isData             = False
 isSignal           = False
 promptLeptonType   = "ele" # choose from 'ele', 'mu'
 L1L2LeptonType     = "em"  # choose from 'ee', 'mm', 'em'
