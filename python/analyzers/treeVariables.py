@@ -342,14 +342,14 @@ electron_vars = [
     Variable('pass_conv_veto'      , lambda ele : ele.passConversionVeto()),
     Variable('reliso05'            , lambda ele : ele.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
     Variable('reliso05_04'         , lambda ele : ele.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
-    Variable('dEtaInSeed'          , lambda ele : f_dEtaInSeed(ele)          ), 
-    Variable('dPhiSCTrackatVtx'    , lambda ele : f_dPhiSCTrackatVtx(ele)    ), 
-    Variable('full5x5sigmaIEtaIEta', lambda ele : f_full5x5sigmaIEtaIEta(ele)),
-    Variable('hadronicOverEM'      , lambda ele : f_hadronicOverEM(ele)      ), 
-    Variable('InvEminusInvP'       , lambda ele : f_InvEminusInvP(ele)       ), 
-    Variable('LooseNoIso'          , lambda ele : LooseNoIsoID(ele)          ),
-    Variable('MediumNoIso'         , lambda ele : MediumNoIsoID(ele)         ), 
-    Variable('MediumWithIso'       , lambda ele : MediumWithIsoID(ele)       ), 
+    Variable('dEtaInSeed'          , lambda ele : ele.f_dEtaInSeed()                          ), 
+    Variable('dPhiSCTrackatVtx'    , lambda ele : ele.f_dPhiSCTrackatVtx()                    ), 
+    Variable('full5x5sigmaIEtaIEta', lambda ele : ele.f_full5x5sigmaIEtaIEta()                ),
+    Variable('hadronicOverEM'      , lambda ele : ele.f_hadronicOverEM()                      ), 
+    Variable('InvEminusInvP'       , lambda ele : ele.f_InvEminusInvP()                       ), 
+    Variable('LooseNoIso'          , lambda ele : ele.LooseNoIsoID()                          ),
+    Variable('MediumNoIso'         , lambda ele : ele.MediumNoIsoID()                         ), 
+    Variable('MediumWithIso'       , lambda ele : ele.MediumWithIsoID()                       ), 
 ]
 
 # photon
@@ -422,6 +422,7 @@ muon_vars = [
     Variable('simPt'                      , lambda muon : muon.simPt()                                        ),
     Variable('simEta'                     , lambda muon : muon.simEta()                                       ),
     Variable('simPhi'                     , lambda muon : muon.simPhi()                                       ),
+    Variable('Medium'                     , lambda muon : muon.MediumID()                                     ),
 ]
 
 # for an extensive summary of possibly interesting muon variables, have a look at
@@ -567,96 +568,3 @@ vbf_vars = [
     Variable('mindetajetvis', lambda vbf : vbf.visjeteta),
 ]
 
-###################################
-           ## HNL IDs ##
-###################################
-
-def f_dEtaInSeed(ele):           
-    return abs(ele.dEtaInSeed()),
-
-def f_dPhiSCTrackatVtx(ele):     
-    return abs(ele.physObj.deltaPhiSuperClusterTrackAtVtx())
-
-def f_full5x5sigmaIEtaIEta(ele): 
-    return ele.physObj.full5x5_sigmaIetaIeta()
-
-def f_hadronicOverEM(ele):       
-    return ele.physObj.hadronicOverEm() - (hOverE_CE  + hOverE_Cr * ele.rho)/(ele.physObj.superCluster().energy())
-
-def f_InvEminusInvP(ele):        
-    return abs(1.0/ele.physObj.ecalEnergy() - ele.physObj.eSuperClusterOverP()/ele.physObj.ecalEnergy()) if ele.physObj.ecalEnergy()>0. else 9e9
-
-# LooseNoIso
-def LooseNoIsoID(ele):
-
-    LooseNoIso = True
-
-    if not ( ele.physObj.isEB() or ele.physObj.isEE() ): 
-        LooseNoIso = False
-
-    if ( f_full5x5sigmaIEtaIEta(ele)    >= ( 0.11    if ele.physObj.isEB() else 0.0314) ): 
-        LooseNoIso = False
-
-    if ( f_dEtaInSeed(ele)              >= ( 0.00477 if ele.physObj.isEB() else 0.00868) ): 
-        LooseNoIso = False
-
-    if ( f_dPhiSCTrackatVtx(ele)        >= ( 0.222   if ele.physObj.isEB() else 0.213) ):
-        LooseNoIso = False
-
-    if ( f_hadronicOverEM(ele)          >= ( 0.298   if ele.physObj.isEB() else 0.101) ):
-        LooseNoIso = False
-
-    if ( f_InvEminusInvP(ele)           >= ( 0.241   if ele.physObj.isEB() else 0.14) ): 
-        LooseNoIso = False
-
-    return LooseNoIso
-
-# MediumNoIso
-def MediumNoIsoID(ele):
-
-    MediumNoIso = True
-
-    if not ( ele.physObj.isEB() or ele.physObj.isEE() ): 
-        MediumNoIso = False
-
-    if ( f_full5x5sigmaIEtaIEta(ele)    >= ( 0.00998 if ele.physObj.isEB() else 0.0298) ):
-        MediumNoIso = False
-
-    if ( f_dEtaInSeed(ele)              >= ( 0.00311 if ele.physObj.isEB() else 0.00609) ):
-        MediumNoIso = False
-
-    if ( f_dPhiSCTrackatVtx(ele)        >= ( 0.103   if ele.physObj.isEB() else 0.045) ):
-        MediumNoIso = False
-
-    if ( f_hadronicOverEM(ele)          >= ( 0.253   if ele.physObj.isEB() else 0.0878) ):
-        MediumNoIso = False
-
-    if ( f_InvEminusInvP(ele)           >= ( 0.134   if ele.physObj.isEB() else 0.13) ):
-        MediumNoIso = False
-
-    return MediumNoIso
-
-# MediumWithIso
-def MediumWithIsoID(ele):
-
-    TightIso = True
-
-    if not ( ele.physObj.isEB() or ele.physObj.isEE() ): 
-        TightIso =  False
-
-    if ( f_full5x5sigmaIEtaIEta(ele)    >= ( 0.00998 if ele.physObj.isEB() else 0.0292 ) ):
-        TightIso = False
-
-    if ( f_dEtaInSeed(ele)              >= ( 0.00308 if ele.physObj.isEB() else 0.00605) ):
-        TightIso = False
-
-    if ( f_dPhiSCTrackatVtx(ele)        >= ( 0.0816   if ele.physObj.isEB() else 0.0394) ):
-        TightIso = False
-
-    if ( f_hadronicOverEM(ele)          >= ( 0.0414   if ele.physObj.isEB() else 0.0641) ):
-        TightIso = False
-
-    if ( f_InvEminusInvP(ele)           >= ( 0.0129   if ele.physObj.isEB() else 0.0129) ):
-        TightIso = False      
-
-    return TightIso

@@ -12,6 +12,7 @@ from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB, DYJetsToLL_M10to50
 # samples = [Single_ele_2017B,Single_ele_2017C,Single_ele_2017D,Single_ele_2017E,Single_ele_2017F]
 samples = [DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext]
 samples = [DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, TTJets_amcat, WJetsToLNu, WJetsToLNu_ext, DYJetsToLL_M50_ext]
+samples = [TTJets_amcat, TTJets_amcat]
 
 # edit the lines here to specify your ntuple production mode 
 production         = False # state whether you're running production mode or not
