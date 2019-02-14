@@ -342,6 +342,9 @@ electron_vars = [
     Variable('pass_conv_veto'      , lambda ele : ele.passConversionVeto()),
     Variable('reliso05'            , lambda ele : ele.relIsoR(R=0.3, dBetaFactor=0.5, allCharged=0)),
     Variable('reliso05_04'         , lambda ele : ele.relIsoR(R=0.4, dBetaFactor=0.5, allCharged=0)),
+    Variable('reliso_rho_05'       , lambda ele : ele.relIsoFromEA(0.5)                       ),
+    Variable('reliso_rho_04'       , lambda ele : ele.relIsoFromEA(0.4)                       ),
+    Variable('reliso_rho_03'       , lambda ele : ele.relIsoFromEA(0.3)                       ),
     Variable('dEtaInSeed'          , lambda ele : ele.f_dEtaInSeed()                          ), 
     Variable('dPhiSCTrackatVtx'    , lambda ele : ele.f_dPhiSCTrackatVtx()                    ), 
     Variable('full5x5sigmaIEtaIEta', lambda ele : ele.f_full5x5sigmaIEtaIEta()                ),
@@ -422,7 +425,7 @@ muon_vars = [
     Variable('simPt'                      , lambda muon : muon.simPt()                                        ),
     Variable('simEta'                     , lambda muon : muon.simEta()                                       ),
     Variable('simPhi'                     , lambda muon : muon.simPhi()                                       ),
-    Variable('Medium'                     , lambda muon : muon.MediumID()                                     ),
+#    Variable('Medium'                     , lambda muon : muon.MediumID()                                     ),
 ]
 
 # for an extensive summary of possibly interesting muon variables, have a look at
