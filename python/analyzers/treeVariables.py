@@ -425,7 +425,7 @@ muon_vars = [
     Variable('simPt'                      , lambda muon : muon.simPt()                                        ),
     Variable('simEta'                     , lambda muon : muon.simEta()                                       ),
     Variable('simPhi'                     , lambda muon : muon.simPhi()                                       ),
-#    Variable('Medium'                     , lambda muon : muon.MediumID()                                     ),
+    Variable('Medium'                     , lambda muon : muon.Medium()                                       ),
 ]
 
 # for an extensive summary of possibly interesting muon variables, have a look at
