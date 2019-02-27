@@ -1,0 +1,1 @@
+00	00,04,08,12,16,20     *	*	*	lxplus111.cern.ch	/afs/cern.ch/user/v/vstampf/cronJob.sh
