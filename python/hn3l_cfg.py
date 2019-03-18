@@ -113,7 +113,8 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
     metFilter = cfg.Analyzer(
         METFilter,
         name='METFilter',
-        processName='RECO',
+        processName='PAT',  #mschoene: Filters very much do exist in MC and most of them should be applied to MC as well, but not all!
+        fallbackProcessName = 'RECO',
         triggers=[
             'Flag_goodVertices',
             'Flag_globalSuperTightHalo2016Filter',
@@ -379,21 +380,22 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         selectedComponents   = [comp]
         comp.splitFactor     = 1
         comp.fineSplitFactor = 1
-        comp.files           = comp.files[:]
+        comp.files           = comp.files[:1] #mschoene: for testing it's much quicker to run just on the first file
 
     ###################################################
     ###            PREPROCESSOR                     ###
     ###################################################
-    preprocessor = None
+    preprocessor = True  #mschoene: for false it will use EOSEventsWithDownload, which actually copies the file, which is extremely slow
 
     #temporary copy remote files using xrd
     from PhysicsTools.HeppyCore.framework.eventsfwlite import Events
     from CMGTools.HNL.utils.EOSEventsWithDownload import EOSEventsWithDownload
     event_class = EOSEventsWithDownload if not preprocessor else Events
+
     EOSEventsWithDownload.aggressive = 2 # always fetch if running on Wigner
     EOSEventsWithDownload.long_cache = getHeppyOption('long_cache', False)
 
-    if preprocessor: preprocessor.prefetch = prefetch
+    #    if preprocessor: preprocessor.prefetch = prefetch #mschoene: removed as unused
 
     # if extrap_muons_to_L1:
         # fname = '$CMSSW_BASE/src/CMGTools/WTau3Mu/prod/muon_extrapolator_cfg.py'
@@ -410,7 +412,7 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         components   = selectedComponents,
         sequence     = sequence,
         services     = [],
-        preprocessor = preprocessor,
+        #        preprocessor = preprocessor, #mschoene: removed as unused
         events_class = event_class
     )
 
