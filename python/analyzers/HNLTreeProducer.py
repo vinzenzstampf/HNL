@@ -344,7 +344,7 @@ class HNLTreeProducer(TreeProducerBase):
         
             for ilep, idr2 in tomatch:
                 bestmatch, dr2 = bestMatch(ilep, stable_genp)
-                if ( dr2 < idr2 and abs((ilep.pt() - bestmatch.pt())/ilep.pt()) < 0.2 ): 
+                if (dr2 < idr2 and abs((ilep.pt() - bestmatch.pt())/ilep.pt()) < 0.2 ): 
                     ilep.bestmatch = bestmatch
 
             # relevant for signal: check if reco matched with gen, save a bool
@@ -365,7 +365,6 @@ class HNLTreeProducer(TreeProducerBase):
                 self.fillSimpleGenParticle(self.tree, 'l2_gen_match', uhv.bestmatch)
                 if deltaR(uhv.bestmatch, uhv) < 0.04 and uhv.pdgId() == uhv.bestmatch.pdgId():
                     self.fill(self.tree, 'l2_good_match', 1)
-
 
             # FIXME! matching by pointer does not work, so let's trick it with deltaR
             if hasattr(event, 'the_hnl'):

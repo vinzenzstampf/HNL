@@ -15,6 +15,7 @@ TTJets = creator.makeMCComponent(
     xSec    = 831.76, 
     useAAA  = True
 )
+TTJets .nGenEvents = TTJets.dataset_entries 
 
 WJetsToLNu = creator.makeMCComponent(
     name    = 'WJetsToLNu', 
@@ -24,6 +25,7 @@ WJetsToLNu = creator.makeMCComponent(
     xSec    = 59850.,
     useAAA  = True
 )
+WJetsToLNu .nGenEvents = WJetsToLNu.dataset_entries 
 
 WJetsToLNu_ext = creator.makeMCComponent(
     name    = 'WJetsToLNu_ext', 
@@ -33,6 +35,7 @@ WJetsToLNu_ext = creator.makeMCComponent(
     xSec    = 59850.,
     useAAA  = True
 )
+WJetsToLNu_ext .nGenEvents = WJetsToLNu_ext.dataset_entries 
 
 ZZZ = creator.makeMCComponent(
     name    = 'ZZZ', 
@@ -126,7 +129,6 @@ TTZToLL_M10 = creator.makeMCComponent(
     xSec    = 0.2529, 
     useAAA  = True
 )
-
 TTZToLL_M10 .nGenEvents = TTZToLL_M10.dataset_entries 
 
 
@@ -209,23 +211,26 @@ DYBB = creator.makeMCComponent(
     xSec    = 1.459e+01,# +- 5.139e-02 pb
     useAAA  = True
 )
+DYBB .nGenEvents = DYBB.dataset_entries 
 
 DYJetsToLL_M10to50 = creator.makeMCComponent(
     name    = 'DYJetsToLL_M10to50',
     dataset = '/DYJetsToLL_M-10to50_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root',
-    xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb
+    # xSec    = (1.581e+04)*1.23,# +- 2.890e+01 pb; old value
+    xSec    = 18610.0,
     useAAA  = True
 )
-
+DYJetsToLL_M10to50.nGenEvents = DYJetsToLL_M10to50.dataset_entries 
 
 DYJetsToLL_M50 = creator.makeMCComponent(
     name    = 'DYJetsToLL_M50',
     dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
-    xSec    = 1921.8*3, 
+    # xSec    = 1921.8*3, #oldValue 
+    xSec    = 2075.14*3, 
     useAAA  = True
 )
 DYJetsToLL_M50.nGenEvents = DYJetsToLL_M50.dataset_entries
@@ -235,9 +240,11 @@ DYJetsToLL_M50_ext = creator.makeMCComponent(
     dataset = '/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14_ext1-v1/MINIAODSIM',
     user    = 'CMS', 
     pattern = '.*root', 
-    xSec    = 1921.8*3, 
+    # xSec    = 1921.8*3, #oldValue 
+    xSec    = 2075.14*3, 
     useAAA  = True
 )
+DYJetsToLL_M50_ext.nGenEvents = DYJetsToLL_M50_ext.dataset_entries
 
 
 DY1JetsToLL_M50 = creator.makeMCComponent(
@@ -248,6 +255,7 @@ DY1JetsToLL_M50 = creator.makeMCComponent(
     xSec    = 1016, 
     useAAA  = True
 )
+DY1JetsToLL_M50.nGenEvents = DY1JetsToLL_M50.dataset_entries
 
 DY2JetsToLL_M50 = creator.makeMCComponent(
     name    = 'DY2JetsToLL_M50', 
@@ -257,6 +265,7 @@ DY2JetsToLL_M50 = creator.makeMCComponent(
     xSec    = 331.4,
     useAAA  = True
 )
+DY2JetsToLL_M50.nGenEvents = DY2JetsToLL_M50.dataset_entries
 
 DY2JetsToLL_M50_ext = creator.makeMCComponent(
     name    = 'DY2JetsToLL_M50_ext', 
@@ -266,6 +275,7 @@ DY2JetsToLL_M50_ext = creator.makeMCComponent(
     xSec    = 331.4,
     useAAA  = True
 )
+DY2JetsToLL_M50_ext.nGenEvents = DY2JetsToLL_M50_ext.dataset_entries
 
 DY3JetsToLL_M50 = creator.makeMCComponent(
     name    = 'DY3JetsToLL_M50', 
@@ -275,6 +285,7 @@ DY3JetsToLL_M50 = creator.makeMCComponent(
     xSec    = 96.36,
     useAAA  = True
 )
+DY3JetsToLL_M50.nGenEvents = DY3JetsToLL_M50.dataset_entries
 
 DY3JetsToLL_M50_ext = creator.makeMCComponent(
     name    = 'DY3JetsToLL_M50_ext', 
@@ -284,6 +295,7 @@ DY3JetsToLL_M50_ext = creator.makeMCComponent(
     xSec    = 96.36,
     useAAA  = True
 )
+DY3JetsToLL_M50_ext.nGenEvents = DY3JetsToLL_M50_ext.dataset_entries
 
  
 QCD_pt_15to20_mu = creator.makeMCComponent(
@@ -294,6 +306,7 @@ QCD_pt_15to20_mu = creator.makeMCComponent(
     xSec    = 2.798e+06,# +- 9.154e+03 pb
     useAAA  = True
 )
+QCD_pt_15to20_mu.nGenEvents = QCD_pt_15to20_mu.dataset_entries
 
 QCD_pt_20to30_mu = creator.makeMCComponent(
     name    = 'QCD_pt_20to30_mu', 
@@ -303,6 +316,7 @@ QCD_pt_20to30_mu = creator.makeMCComponent(
     xSec    = 2.533e+06,# +- 8.257e+03 pb
     useAAA  = True
 ) 
+QCD_pt_20to30_mu.nGenEvents = QCD_pt_20to30_mu.dataset_entries
 
 QCD_pt_30to50_mu = creator.makeMCComponent(
     name    = 'QCD_pt_30to50_mu', 
@@ -312,6 +326,7 @@ QCD_pt_30to50_mu = creator.makeMCComponent(
     xSec    = 1.375e+06,# +- 4.484e+03 pb
     useAAA  = True
 ) 
+QCD_pt_30to50_mu.nGenEvents = QCD_pt_30to50_mu.dataset_entries
 
 QCD_pt_50to80_mu = creator.makeMCComponent(
     name    = 'QCD_pt_50to80_mu', 
@@ -321,6 +336,7 @@ QCD_pt_50to80_mu = creator.makeMCComponent(
     xSec    = 3.770e+05,# +- 1.214e+03 pb
     useAAA  = True
 ) 
+QCD_pt_50to80_mu.nGenEvents = QCD_pt_50to80_mu.dataset_entries
 
 QCD_pt_80to120_mu = creator.makeMCComponent(
     name    = 'QCD_pt_80to120_mu',
@@ -330,6 +346,7 @@ QCD_pt_80to120_mu = creator.makeMCComponent(
     xSec    = 8.880e+04,# +- 2.854e+02 pb
     useAAA  = True
 ) 
+QCD_pt_80to120_mu.nGenEvents = QCD_pt_80to120_mu.dataset_entries
 
 # fake electrons
 QCD_pt_20to30_bcToE = creator.makeMCComponent(
@@ -340,6 +357,7 @@ QCD_pt_20to30_bcToE = creator.makeMCComponent(
     xSec    = 3.053e+05,# +- 1.049e+03 pb
     useAAA  = True
 ) 
+QCD_pt_20to30_bcToE.nGenEvents = QCD_pt_20to30_bcToE.dataset_entries
 
 QCD_pt_30to80_bcToE = creator.makeMCComponent(
     name    = 'QCD_pt_30to80_bcToE', 
@@ -349,6 +367,7 @@ QCD_pt_30to80_bcToE = creator.makeMCComponent(
     xSec    = 3.616e+05,# +- 1.361e+03 pb
     useAAA  = True
 ) 
+QCD_pt_30to80_bcToE.nGenEvents = QCD_pt_30to80_bcToE.dataset_entries
 
 QCD_pt_80to170_bcToE = creator.makeMCComponent(
     name    = 'QCD_pt_80to170_bcToE', 
@@ -358,6 +377,7 @@ QCD_pt_80to170_bcToE = creator.makeMCComponent(
     xSec    = 3.377e+04,# +- 1.088e+02 pb
     useAAA  = True
 ) 
+QCD_pt_80to170_bcToE.nGenEvents = QCD_pt_80to170_bcToE.dataset_entries
 
 QCD_pt_170to250_bcToE = creator.makeMCComponent(
     name    = 'QCD_pt_170to250_bcToE', 
@@ -367,6 +387,7 @@ QCD_pt_170to250_bcToE = creator.makeMCComponent(
     xSec    = 2.136e+03,# +- 1.359e+01 pb
     useAAA  = True
 ) 
+QCD_pt_170to250_bcToE.nGenEvents = QCD_pt_170to250_bcToE.dataset_entries
 
 QCD_pt_250toInf_bcToE = creator.makeMCComponent(
     name    = 'QCD_pt_250toInf_bcToE', 
@@ -376,6 +397,7 @@ QCD_pt_250toInf_bcToE = creator.makeMCComponent(
     xSec    = 5.596e+02,# +- 2.029e+00 pb
     useAAA  = True
 ) 
+QCD_pt_250toInf_bcToE.nGenEvents = QCD_pt_250toInf_bcToE.dataset_entries
 
 QCD_pt_15to20_em = creator.makeMCComponent(
     name    = 'QCD_pt_15to20_em', 
@@ -385,6 +407,7 @@ QCD_pt_15to20_em = creator.makeMCComponent(
     xSec    = 1.309e+06,# +- 8.450e+03 pb
     useAAA  = True
 ) 
+QCD_pt_15to20_em.nGenEvents = QCD_pt_15to20_em.dataset_entries
 
 QCD_pt_20to30_em = creator.makeMCComponent(
     name    = 'QCD_pt_20to30_em',
@@ -394,6 +417,7 @@ QCD_pt_20to30_em = creator.makeMCComponent(
     xSec    = 4.920e+06,# +- 3.187e+04 pb
     useAAA  = True
 ) 
+QCD_pt_20to30_em.nGenEvents = QCD_pt_20to30_em.dataset_entries
 
 QCD_pt_30to50_em = creator.makeMCComponent(
     name    = 'QCD_pt_30to50_em',
@@ -403,6 +427,7 @@ QCD_pt_30to50_em = creator.makeMCComponent(
     xSec    = 6.397e+06,# +- 2.039e+04 pb
     useAAA  = True
 ) 
+QCD_pt_30to50_em.nGenEvents = QCD_pt_30to50_em.dataset_entries
 
 QCD_pt_50to80_em = creator.makeMCComponent(
     name    = 'QCD_pt_50to80_em', 
@@ -412,6 +437,7 @@ QCD_pt_50to80_em = creator.makeMCComponent(
     xSec    = 1.989e+06,# +- 6.197e+03 pb
     useAAA  = True
 ) 
+QCD_pt_50to80_em.nGenEvents = QCD_pt_50to80_em.dataset_entries
 
 # NOT ON DAS!
 #QCD_pt_80to120_em = creator.makeMCComponent(
@@ -430,6 +456,7 @@ QCD_pt_120to170_em = creator.makeMCComponent(
     xSec    = 6.633e+04,# +- 2.318e+02 pb
     useAAA  = True
 ) 
+QCD_pt_120to170_em.nGenEvents = QCD_pt_120to170_em.dataset_entries
 
 # NOT ON DAS!
 #QCD_pt_170to300_em = creator.makeMCComponent(
@@ -448,6 +475,7 @@ QCD_pt_300toInf_em = creator.makeMCComponent(
     xSec    = 1.108e+03,# +- 4.856e+00 pb
     useAAA  = True
 ) 
+QCD_pt_300toInf_em.nGenEvents = QCD_pt_300toInf_em.dataset_entries
 
 qcd = [QCD_pt_15to20_em, QCD_pt_20to30_em, QCD_pt_30to50_em, QCD_pt_50to80_em, QCD_pt_120to170_em, QCD_pt_300toInf_em, QCD_pt_20to30_bcToE, QCD_pt_30to80_bcToE, QCD_pt_80to170_bcToE, QCD_pt_170to250_bcToE, QCD_pt_250toInf_bcToE, QCD_pt_15to20_mu, QCD_pt_20to30_mu, QCD_pt_30to50_mu, QCD_pt_50to80_mu, QCD_pt_80to120_mu]
 
@@ -463,6 +491,7 @@ W1JetsToLNu = creator.makeMCComponent(
     xSec    = 8.139e+03,# +- 3.379e+01 pb
     useAAA  = True
 ) 
+W1JetsToLNu.nGenEvents = W1JetsToLNu.dataset_entries
 
 W2JetsToLNu = creator.makeMCComponent(
     name    = 'W2JetsToLNu', 
@@ -472,6 +501,7 @@ W2JetsToLNu = creator.makeMCComponent(
     xSec    = 2.781e+03,# +- 1.672e+01 pb
     useAAA  = True
 ) 
+W2JetsToLNu.nGenEvents = W2JetsToLNu.dataset_entries
 
 W3JetsToLNu = creator.makeMCComponent(
     name    = 'W3JetsToLNu',
@@ -481,6 +511,7 @@ W3JetsToLNu = creator.makeMCComponent(
     xSec    = 993.4*1.17, 
     useAAA  = True
 )
+W3JetsToLNu.nGenEvents = W3JetsToLNu.dataset_entries
 #.sigma = 993.4*1.17 pb; .nevents = 6265138; .L = 5390.395413145565 pb^-1 
  
 W4JetsToLNu = creator.makeMCComponent(
@@ -491,6 +522,7 @@ W4JetsToLNu = creator.makeMCComponent(
     xSec    = 542.4*1.17, 
     useAAA  = True
 )
+W4JetsToLNu.nGenEvents = W4JetsToLNu.dataset_entries
 #.sigma = 542.4*1.17 pb; .nevents = 3356894; .L = 5289.712704535714 pb^-1  
 
 wjets = [W1JetsToLNu, W2JetsToLNu, W3JetsToLNu, W4JetsToLNu]
@@ -501,10 +533,18 @@ wjets = [W1JetsToLNu, W2JetsToLNu, W3JetsToLNu, W4JetsToLNu]
 # assign to each sample its own PU profile file. For 2017 it is important to do it per-sample
 ##########################################################################################
 # TODO temporary workaround for pu of new samples
+<<<<<<< HEAD
 DYBB                                      .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYBB.root' 
 DYJetsToLL_M10to50                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJets_M10to50.root' 
 DYJetsToLL_M50                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root' 
 DYJetsToLL_M50_ext                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50_ext.root' 
+=======
+# DYBB                                      .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYBB.root' 
+# DYJetsToLL_M10to50                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJets_M10to50.root' 
+# DYJetsToLL_M10to50_ext                    .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJets_M10to50.root'  # FIXME
+# DYJetsToLL_M50                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50.root' 
+# DYJetsToLL_M50_ext                        .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_DYJetsToLL_M50_ext.root' 
+>>>>>>> a3c9a138bd1a0aeeab0a3aa89c545805dca82c31
 WJetsToLNu                                .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu.root'   # in Albert W3JetsToLNu-LO  /W3JetsToLNu_TuneCP5_13TeV-madgraphMLM-pythia8/RunIIFall17MiniAODv2-PU2017_12Apr2018_94X_mc2017_realistic_v14-v1/MINIAODSIM
 WJetsToLNu_ext                            .puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_WJetsToLNu.root'
 for i in qcd+wjets:                      i.puFileMC = os.environ['CMSSW_BASE'] + '/src/CMGTools/HNL/data/pileup/pileup_TTJets_amcat.root' # derived manually 
@@ -543,7 +583,7 @@ hnl_bkg_noskim = [
     WWZ, 
     WWW, 
     WWTo2L2Nu, 
-    WGGJets, 
+    WGGJets,
     TTWJetsToLNu, 
     TTZToLL_M10, 
     TTZToLL_M1to10, 
@@ -552,7 +592,12 @@ hnl_bkg_noskim = [
     ST_tch_inc, 
     STbar_tW_inc, 
     ST_tW_inc, 
+    DYBB,
     DYJetsToLL_M10to50,
+<<<<<<< HEAD
+=======
+    # DYJetsToLL_M10to50_ext,
+>>>>>>> a3c9a138bd1a0aeeab0a3aa89c545805dca82c31
     DYJetsToLL_M50,
     DYJetsToLL_M50_ext,
     DY1JetsToLL_M50,     
@@ -562,7 +607,8 @@ hnl_bkg_noskim = [
     DY3JetsToLL_M50_ext, 
 ] 
 
-hnl_bkg_noskim += qcd + wjets + [DYBB]
+
+hnl_bkg_noskim += qcd + wjets 
 for sample in hnl_bkg_noskim: sample.nGenEvents = sample.dataset_entries
 
 

@@ -8,22 +8,15 @@ from CMGTools.HNL.hn3l_cfg import *
 # from CMGTools.HNL.samples.samples_data_2017 import Single_mu_2017 as sample
 # samples = [sample] 
 
-from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F
+# from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F
 # samples = [Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F]
-from CMGTools.HNL.samples.samples_mc_2017        import TTJets_amcat, WJetsToLNu
-from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WJetsToLNu_ext
-
-from CMGTools.HNL.samples.signal_13sept18 import HN3L_M_2_V_0p01_mu_massiveAndCKM_LO
-
-samples = [DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext]
-samples = [DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, TTJets_amcat, WJetsToLNu, WJetsToLNu_ext, DYJetsToLL_M50_ext]
-
-samples = [HN3L_M_2_V_0p01_mu_massiveAndCKM_LO]
+from CMGTools.HNL.samples.samples_mc_2017_noskim import WJetsToLNu_ext 
+samples = [WJetsToLNu_ext]
 
 # edit the lines here to specify your ntuple production mode 
 production         = True # state whether you're running production mode or not
 isData             = False
-isSignal           = True
+isSignal           = False
 promptLeptonType   = "mu" # choose from 'ele', 'mu'
 L1L2LeptonType     = "em"  # choose from 'ee', 'mm', 'em'
 

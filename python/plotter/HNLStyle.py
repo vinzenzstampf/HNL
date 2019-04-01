@@ -1,4 +1,4 @@
-from ROOT import TColor, kViolet, kBlue, kRed, kCyan, kAzure, kGreen, kMagenta, kYellow
+from ROOT import TColor, kViolet, kBlue, kRed, kCyan, kAzure, kGreen, kMagenta, kYellow, kOrange
 
 class Style:
 
@@ -64,6 +64,9 @@ tribosoncol = kCyan #TColor.GetColor(222,90,106)
 ttvcol = kCyan+2 #TColor.GetColor(222,90,106)
 zzcol = kGreen+2 #TColor.GetColor(222,90,106)
 singleTcol = kCyan 
+DDEcol_singlefake = kGreen-3 
+DDEcol_doublefake = kBlue-6 
+ConversionCol = kMagenta-9
 
 # Backgrounds
 sHNL_QCD = Style(lineColor=qcdcol, markerColor=qcdcol, fillColor=qcdcol)
@@ -77,8 +80,10 @@ sHNL_VV = Style(lineColor=dibosoncol, markerColor=dibosoncol, fillColor=dibosonc
 sHNL_TTV = Style(lineColor=ttvcol, markerColor=ttvcol, fillColor=ttvcol)
 sHNL_rare = Style(lineColor=tribosoncol, markerColor=tribosoncol, fillColor=tribosoncol)
 sHNL_ZZ = Style(lineColor=zzcol, markerColor=zzcol, fillColor=zzcol)
+sHNL_Conversion = Style(lineColor = ConversionCol, markerColor = ConversionCol, fillColor=ConversionCol)
 sHNL_SingleT = Style(lineColor = singleTcol, markerColor = singleTcol, fillColor=singleTcol)
-
+sHNL_DDE_doublefake = Style(lineColor = DDEcol_doublefake, markerColor = DDEcol_doublefake, fillColor=DDEcol_doublefake)
+sHNL_DDE_singlefake = Style(lineColor = DDEcol_singlefake, markerColor = DDEcol_singlefake, fillColor=DDEcol_singlefake)
 # Signals
 sHNL_HN  = Style(lineColor=kBlue   , markerColor=0, lineStyle=2, fillColor=0, lineWidth=3)
 sHNL_HN2 = Style(lineColor=kAzure+8, markerColor=0, lineStyle=3, fillColor=0, lineWidth=3)
@@ -104,7 +109,7 @@ def nextStyle():
 
 histPref = {}
 histPref['HN*'] = {'style':sHNL_HN, 'layer':2999, 'legend':'#splitline{M = 3GeV, #sigma = 90fb}{c#tau = 14.6cm}'}#times 300}{c#tau = 14.6cm}'}
-histPref['Data'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
+histPref['Data*'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
 histPref['data_*'] = {'style':sData, 'layer':2999, 'legend':'Observed'}
 histPref['ZTT*'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'Z#rightarrow#tau#tau'}
 histPref['DY'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DY'}
@@ -112,6 +117,7 @@ histPref['DYJets'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DYM50'}
 histPref['DYJets_ext'] = {'style':sHNL_DYJets, 'layer':4, 'legend':'DYM50'}
 histPref['DYJetsToLL_M10to50*'] = {'style':sHNL_DYJets_low, 'layer':4, 'legend':'DYM10'}
 histPref['DYBB'] = {'style':sHNL_DYJets_bb, 'layer':4, 'legend':'DYBB'}
+histPref['Conversion*'] = {'style':sHNL_Conversion, 'layer':5, 'legend':'Conversion'}
 histPref['embed_*'] = {'style':sViolet, 'layer':4.1, 'legend':None}
 histPref['TTJets*'] = {'style':sHNL_TTJets, 'layer':1, 'legend':'t#bar{t}'} 
 histPref['T*tW*'] = {'style':sHNL_SingleT, 'layer':1, 'legend':'Single t'} 
@@ -164,3 +170,6 @@ histPref['HiggsVBF125'] = {'style':sHNL_HN2, 'layer':1001, 'legend':'H_{125}#rig
 histPref['ggH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 histPref['bbH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 histPref['SMS*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
+# histPref['DDE*'] = {'style':sHNL_DDE, 'layer':1001, 'legend':'nonprompt'}
+histPref['*doublefake*'] = {'style':sHNL_DDE_doublefake, 'layer':900, 'legend':'DF'}
+histPref['*singlefake*'] = {'style':sHNL_DDE_singlefake, 'layer':900, 'legend':'SF (placeholder)'}
