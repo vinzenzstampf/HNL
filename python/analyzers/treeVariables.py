@@ -285,6 +285,7 @@ gen_particle_vars = [
     Variable('vtx_y'                                         , lambda p: p.vertex().y()                                   ),
     Variable('vtx_z'                                         , lambda p: p.vertex().z()                                   ),
     Variable('status'                                        , lambda p: p.status()                                       ),
+    Variable('isPrompt'                                      , lambda p: p.statusFlags().isPrompt()                       ),
 ]
 
 # stage-2 L1 object
