@@ -4,6 +4,7 @@ from glob import glob
 # from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00282842712475_e_massiveAndCKM_LO     
 # from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00836660026534_e_massiveAndCKM_LO
 from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO
+from CMGTools.HNL.samples.samples_mc_2017_noskim import DYBB
 
 # HN3L_M_2p5_V_0p0173205080757_e_onshell .files = glob('/eos/user/d/dezhu/HNL/miniAOD/20180710_miniAOD/heavyNeutrino*.root')
 # HN3L_M_2_V_0p00282842712475_e_massiveAndCKM_LO.files = glob('/eos/user/d/dezhu/HNL/miniAOD/20180710_miniAOD/heavyNeutrino_99.root')
@@ -14,4 +15,4 @@ from CMGTools.HNL.samples.signal import HN3L_M_2_V_0p00244948974278_e_massiveAnd
 
 
 HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO.files = glob ('/shome/dezhu/3_MiniAODs/HN3L_M_2_V_0p00244948974278_e_massiveAndCKM_LO.root')
-
+DYBB.files = ['root://cms-xrd-transit.cern.ch//store/user/dezhu/1_MiniAODs/F0D805D3-EF42-E811-B94E-00266CF8592C.root']
