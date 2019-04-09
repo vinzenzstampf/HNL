@@ -171,5 +171,5 @@ histPref['ggH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 histPref['bbH*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 histPref['SMS*'] = {'style':sHNL_HN, 'layer':1001, 'legend':None}
 # histPref['DDE*'] = {'style':sHNL_DDE, 'layer':1001, 'legend':'nonprompt'}
-histPref['*doublefake*'] = {'style':sHNL_DDE_doublefake, 'layer':900, 'legend':'DF'}
-histPref['*singlefake*'] = {'style':sHNL_DDE_singlefake, 'layer':900, 'legend':'SF (placeholder)'}
+histPref['*dfr*'] = {'style':sHNL_DDE_doublefake, 'layer':900, 'legend':'DF'}
+histPref['*sfr*'] = {'style':sHNL_DDE_singlefake, 'layer':900, 'legend':'SF'}

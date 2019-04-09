@@ -3,6 +3,7 @@ import os
 from collections import namedtuple
 from operator import itemgetter
 from ROOT import gROOT as gr
+from getpass import getuser
 
 import shutil
 from shutil import copyfile, copytree
@@ -93,7 +94,7 @@ def createSamples(channel, analysis_dir, total_weight, server, add_data_cut=None
     print'# samples to be used:'
     print('###########################################################')
     for w in working_samples: print w.name + ', ',
-    print '(%d sample(s))'%(len(working_samples))
+    print '\n\t(%d sample(s))'%(len(working_samples))
 
     return sample_dict
 
@@ -111,7 +112,7 @@ def createVariables(rebin=None):
 
     return variables
 
-def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict, make_plots=True, create_trees=False, multiprocess = True):
+def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict, make_plots=True, create_trees=False, multiprocess = False):
     ams_dict = {}
     sample_names = set()
     for region in regions:
@@ -129,7 +130,7 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
         
         HISTS = CreateHists(cfg_main)
 
-        plots = HISTS.createHistograms(cfg_main, verbose=False, multiprocess = multiprocess)
+        plots = HISTS.createHistograms(cfg_main, verbose=True, multiprocess = multiprocess)
         #plots.legendPos = 'right'
         for variable in variables:
         # for plot in plots.itervalues():
@@ -147,7 +148,7 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
                 plot.Group('WJets', ['W1JetsToLNu', 'W2JetsToLNu', 'W3JetsToLNu', 'W4JetsToLNu'])
 
             if channel_name == "#mu#mu#mu":
-                plot.Group('data_obs', ['data_2017B', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
+                plot.Group('data_obs', ['data_2017B'])#', 'data_2017C', 'data_2017D', 'data_2017E', 'data_2017F'])
                 plot.Group('Diboson', ['WZTo3LNu','ZZTo4L'])
                 # plot.Group('ttV', ['TTWJetsToLNu'])
                 plot.Group('DY', ['DYJets_ext','DYBB','DYJetsToLL_M10to50'])
@@ -158,7 +159,7 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
             if make_plots:
                 HistDrawer.draw(plot, channel = channel_name, plot_dir = plotDir+region.name)
 
-    print '\nOptimisation results:'
+    print '\n\t\nOptimisation results:'
 
     all_vals = ams_dict.items()
     for sample_name in sample_names:
@@ -167,10 +168,10 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
         for key, item in vals:
             print item, key
 
-        print '\nBy variable'
+        print '\n\t\nBy variable'
         for variable in variables:
             name = variable.name
-            print '\nResults for variable', name
+            print '\n\t\nResults for variable', name
             for key, item in vals:
                 if key.startswith(name + '__'):
                     print item, key
@@ -179,7 +180,7 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
 def producePlots(promptLeptonType, L1L2LeptonType, server):
 
     if server == 't3':
-        plotDirBase = '/work/dezhu/3_figures/1_DataMC/FinalStates/'
+        plotDirBase = '/eos/user/v/vstampf/plots/'#'/work/dezhu/3_figures/1_DataMC/FinalStates/'
     if server == 'lxplus':
         plotDirBase = '/eos/user/d/dezhu/HNL/plots/FinalStates/'
 
@@ -216,7 +217,7 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         analysis_dir = '/eos/user/v/vstampf/ntuples/'
    
     if server == "t3":
-        analysis_dir = 'root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv1.0/' + channel + '/'
+        analysis_dir = 'root://cms-xrd-transit.cern.ch//store/user/dezhu/2_ntuples/HN3Lv1.0/' + channel + '/'
 
     total_weight = 'weight * lhe_weight'
     # total_weight = '1'
@@ -240,15 +241,17 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         total_weight, 
         sample_dict, 
         make_plots=True,
-        multiprocess=True
+        multiprocess=False
     )
 
     for i in regions:
-        copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
-        copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plot_cfg_hn3l.py', plotDir+i.name+'/plot_cfg_base.py')
-        copyfile('/t3home/dezhu/HNL/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plotter/Selections.py', plotDir+i.name+'/Selections.py')
-        print 'cfg file stored in "', plotDir + i.name + '/plot_cfg.py"'
-        print 'cfg_base file stored in "', plotDir + i.name + '/plot_cfg_base.py"'
+        if getuser == 'vstampf': baseDir = os.getcwd()
+        if getuser == 'dezhu': baseDir = os.getcwd()
+        copyfile('/afs/cern.ch/user/v/vstampf/CMSSW_9_4_6_patch1/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
+        copyfile('/afs/cern.ch/user/v/vstampf/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plot_cfg_hn3l.py', plotDir+i.name+'/plot_cfg_base.py')
+        copyfile('/afs/cern.ch/user/v/vstampf/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plotter/Selections.py', plotDir+i.name+'/Selections.py')
+        print '\n\tcfg file stored in "', plotDir + i.name + '/plot_cfg.py"'
+        print '\n\tcfg_base file stored in "', plotDir + i.name + '/plot_cfg_base.py"'
         # copytree(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)
-        os.system("cp -rf %s %s"%(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)) 
-        print 'directory %s copied to /t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm!'%(i.name)
+        #os.system("cp -rf %s %s"%(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)) 
+        #print '\n\tdirectory %s copied to /t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm!'%(i.name)

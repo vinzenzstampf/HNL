@@ -3,6 +3,7 @@ import copy
 import fnmatch
 
 from ROOT import TLegend, TLine, TPad, TFile, gROOT
+from collections import OrderedDict
 
 from CMGTools.RootTools.DataMC.Histogram import Histogram
 from CMGTools.RootTools.DataMC.Stack import Stack
@@ -20,6 +21,13 @@ def ymax(hists):
         ymax = 1
     return ymax
 
+fakerate_tree = OrderedDict()
+fakerate_tree['2017B_mmm_sfr_012'] = '/eos/user/v/vstampf/plots/DDE/friendTree_mmm_190403_17h_41m/fr_012_mmm_sfr_190403_17h_41m.root' 
+fakerate_tree['2017B_mmm_sfr_021'] = '/eos/user/v/vstampf/plots/DDE/friendTree_mmm_190403_17h_41m/fr_021_mmm_sfr_190403_17h_41m.root' 
+fakerate_tree['2017B_mmm_dfr']     = '/eos/user/v/vstampf/plots/DDE/friendTree_mmm_190403_17h_41m/fr_dfr_fake.root' 
+
+friend_trees = OrderedDict()
+friend_trees['2017B_mmm'] = {'sfr_012':fakerate_tree['2017B_mmm_sfr_012'], 'sfr_012':fakerate_tree['2017B_mmm_sfr_012'], 'dfr_012':fakerate_tree['2017B_mmm_dfr']}
 
 class DataMCPlot(object):
 
@@ -58,22 +66,36 @@ class DataMCPlot(object):
     def __getitem__(self, name):
         return self.histosDict[name]
 
-    def readTree(self, file_name, tree_name='tree', verbose=False, friend_func=None):
+    def getFriendTrees(self, file_name):
+        '''returns name of friend tree (fake rate tree) for respective tree file'''
+        if '2017B' in file_name: 
+            # file_name is full path to file
+            return friend_trees['2017B_mmm'] 
+        if not file_name: 
+            print '\n\terror: no file_name specified'
+        return None
+
+    def readTree(self, file_name, tree_name='tree', verbose=True):
         '''Cache files/trees'''
         if file_name in self.__class__._t_keeper:
             ttree = self.__class__._t_keeper[file_name]
             if verbose:
-                print 'got cached tree', ttree
+                print '\n\tgot cached tree', ttree
         else:
             tfile = self.__class__._f_keeper[file_name] = TFile.Open(file_name)
             ttree = self.__class__._t_keeper[file_name] = tfile.Get(tree_name)
             if verbose:
-                print 'read tree', ttree, 'from file', file_name
+                print '\n\tread tree', ttree, 'from file', file_name
 
-        if friend_func:
-            file_name = friend_func(file_name)
-            friend_tree = self.readTree(file_name, tree_name, verbose)
-            ttree.AddFriend(friend_tree)
+        friend_list = self.getFriendTrees(file_name)
+        if friend_list:
+            for j, friend_name in enumerate(friend_list.keys()):
+                friend_tree = self.readTree(friend_list[friend_name], tree_name, verbose)
+                try: ttree.AddFriend(friend_tree, 'ft%d'%j)
+                except: set_trace()
+                print '\n\thappy tree friend added: ft%d'%j, friend_list[friend_name]
+                if verbose:
+                    print '\n\tsuccess: happy tree friend added:', friend_list[friend_name]
 
         gROOT.cd()
 
@@ -112,7 +134,7 @@ class DataMCPlot(object):
             hist = self.histosDict.get(name, None)
             if hist is None:
                 if not silent:
-                    print 'warning, no histo with name', name
+                    print '\n\twarning, no histo with name', name
                 continue
             if groupHist is None:
                 groupHist = hist.Clone(groupName)
@@ -144,7 +166,7 @@ class DataMCPlot(object):
         '''Not very elegant... should have a clone function in Histogram...'''
         oldh = self.histosDict.get(name, None)
         if oldh is None:
-            print 'histogram', name, 'does not exist, cannot replace it.'
+            print '\n\thistogram', name, 'does not exist, cannot replace it.'
             return
 
         pythist = copy.deepcopy(pyhist)
@@ -351,7 +373,7 @@ class DataMCPlot(object):
                         ymin=ymin, ymax=ymax)
         self.ratios = []
         for hist in self.nostack:
-            # print 'nostack ', hist
+            # print '\n\tnostack ', hist
             ratio = copy.deepcopy(hist)
             ratio.Normalize()
             ratio.obj.Divide(denom.weighted)
@@ -494,9 +516,9 @@ class DataMCPlot(object):
 
         outf = TFile(filename, mode)
         if dir and outf.Get(dir):
-            print 'Directory', dir, 'already present in output file'
+            print '\n\tDirectory', dir, 'already present in output file'
             if any(outf.Get(dir+'/'+hist.name+postfix) for hist in self._SortedHistograms()):
-                print 'Recreating file because histograms already present'
+                print '\n\tRecreating file because histograms already present'
                 outf = TFile(filename, 'RECREATE')
         if dir:
             outf_dir = outf.Get(dir)
@@ -529,11 +551,11 @@ class DataMCPlot(object):
         for prefpat, pref in self.histPref.iteritems():
             if fnmatch.fnmatch(name, prefpat):
                 if thePref is not None:
-                    print 'several matching preferences for', name
+                    print '\n\tseveral matching preferences for', name
                 thePref = pref
-                # print 'preferences set for', name
+                # print '\n\tpreferences set for', name
         if thePref is None:
-            print 'cannot find preference for hist', name
+            print '\n\tcannot find preference for hist', name
         return thePref
 
     def _ApplyPrefs(self):

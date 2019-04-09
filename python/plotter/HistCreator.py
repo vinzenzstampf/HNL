@@ -1,6 +1,6 @@
 import hashlib
-from multiprocessing import Pool, Process, cpu_count
-# from multiprocessing.dummy import Pool, Process, cpu_count
+#from multiprocessing import Pool, Process, cpu_count
+from multiprocessing.dummy import Pool, Process, cpu_count
 
 from array import array
 
@@ -30,7 +30,7 @@ class CreateHists(object):
             self.vcfgs = hist_cfg.vars
 
         if not self.vcfgs:
-            print 'ERROR in createHistograms: No variable configs passed', self.hist_cfg.name
+            print '\n\tERROR in createHistograms: No variable configs passed', self.hist_cfg.name
 
         self.plots = {}
 
@@ -38,10 +38,10 @@ class CreateHists(object):
             plot = DataMCPlot(vcfg.name)
             plot.lumi = hist_cfg.lumi
             if vcfg.name in self.plots:
-                print 'Adding variable with same name twice', vcfg.name, 'not yet foreseen; taking the last'
+                print '\n\tAdding variable with same name twice', vcfg.name, 'not yet foreseen; taking the last'
             self.plots[vcfg.name] = plot
 
-    def createHistograms(self, hist_cfg, all_stack=False, verbose=False,  vcfgs=None, multiprocess = True):
+    def createHistograms(self, hist_cfg, all_stack=False, verbose=False,  vcfgs=None, multiprocess = False):
         '''Method to create actual histogram (DataMCPlot) instances from histogram 
         config; this version handles multiple variables via MultiDraw.
         '''
@@ -84,7 +84,7 @@ class CreateHists(object):
 
                # hist.Scale(cfg.scale)
                 if cfg.name in plot:
-                    # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
+                    # print '\n\tHistogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
                     if (not cfg.is_data) and (not cfg.is_dde):
                         hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
@@ -125,8 +125,7 @@ class CreateHists(object):
 
         return self.plots
 
-    def makealltheplots(self, cfg):
-        verbose=False
+    def makealltheplots(self, cfg, verbose=True):
         all_stack=False
     #    for cfg in [hist_cfg.cfgs[0]]:
     #    for cfg in hist_cfg.cfgs:
@@ -148,7 +147,7 @@ class CreateHists(object):
 
                 if cfg.total_scale is not None:
                     total_hist.Scale(cfg.total_scale)
-                    # print 'Scaling total', hist_cfg.name, 'by', cfg.total_scale
+                    # print '\n\tScaling total', hist_cfg.name, 'by', cfg.total_scale
         else:
             # print('building histgrams for %s'%cfg.name)
             # It's a sample cfg
@@ -167,16 +166,21 @@ class CreateHists(object):
                 ttree = plot.readTree(file_name, cfg.tree_name, verbose=verbose)
             except:
                 set_trace()
+                #print '\n\tplot', cfg.name, 'failed'
 
 
             #define the cuts for different stackplots
-            if cfg.is_dde == True and cfg.is_singlefake == True:
-                norm_cut  = self.hist_cfg.region.SF
-                shape_cut = self.hist_cfg.region.SF
+            if cfg.is_singlefake == True:
+                #norm_cut  = self.hist_cfg.region.SF
+                norm_cut  = self.hist_cfg.region.data
+                #shape_cut = self.hist_cfg.region.SF
+                shape_cut  = self.hist_cfg.region.data
 
-            if cfg.is_dde == True and cfg.is_doublefake == True:
-                norm_cut  = self.hist_cfg.region.DF
-                shape_cut = self.hist_cfg.region.DF
+            if cfg.is_doublefake == True:
+                #norm_cut  = self.hist_cfg.region.DF
+                norm_cut  = self.hist_cfg.region.data
+                #shape_cut = self.hist_cfg.region.DF
+                shape_cut  = self.hist_cfg.region.data
 
             if cfg.is_MC == True:
                 norm_cut  = self.hist_cfg.region.MC
@@ -200,15 +204,17 @@ class CreateHists(object):
 
             weight = self.hist_cfg.weight
             if cfg.weight_expr:
-                weight = '*'.join([weight, cfg.weight_expr])
+                weight = ' * '.join([weight, cfg.weight_expr])
 
             if self.hist_cfg.weight:
                 norm_cut = '({c}) * {we}'.format(c=norm_cut, we=weight)
                 shape_cut = '({c}) * {we}'.format(c=shape_cut, we=weight)
 
+            print '\n\n\tcfg:', cfg.name, '\n\tweight:', weight, '\n\tnorm_cut:', norm_cut
 
 
-            # print '#### FULL CUT ####', norm_cut
+
+            # print '\n\t#### FULL CUT ####', norm_cut
 
             #adapt branch names to different software versions
             if not ttree.FindBranch("l0_reliso_rho_03"): 
@@ -250,7 +256,8 @@ class CreateHists(object):
             # Implement the multidraw.
             # set_trace()
             try:
-                print 'drawing %s with the following cut: '%(cfg.name) + norm_cut
+                print '\n\tdrawing...'# %s with the following cut: '%(cfg.name) + norm_cut
+                #print '\n\tdrawing %s with the following cut: '%(cfg.name) + norm_cut
                 ttree.MultiDraw(var_hist_tuples, norm_cut)
             except:
                 set_trace()
@@ -276,7 +283,7 @@ class CreateHists(object):
                 hist.Scale(cfg.scale)
 
                 if cfg.name in plot:
-                    # print 'Histogram', cfg.name, 'already exists; adding...', cfg.dir_name
+                    # print '\n\tHistogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
                     if (not cfg.is_data) and (not cfg.is_dde):
                         hist_to_add.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
@@ -291,6 +298,6 @@ class CreateHists(object):
                     if (not cfg.is_data) and (not cfg.is_dde):
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
                         # plot_hist.SetWeight(1)
-            print('added histograms for %s'%cfg.name)
+            print '\n\tadded histograms for %s'%cfg.name
             PLOTS = self.plots
         return PLOTS

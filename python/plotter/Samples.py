@@ -60,7 +60,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
             DY_dir = analysis_dir + bkg_dir
         if server == 't3':
             # data_dir = analysis_dir + 'data/'
-            data_dir = 'root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/data/'
+            data_dir = 'root://cms-xrd-transit.cern.ch//store/user/dezhu/2_ntuples/HN3Lv2.0/mmm/data/'
             bkg_dir = 'background'
             sig_dir = 'signal/ntuples'
             DY_dir = analysis_dir + bkg_dir
@@ -243,27 +243,30 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
     ]
   
 
-    # samples_data_dde = [
-        # SampleCfg(name='data_2017', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                          
-    # ]
-
     samples_data_dde = [
-        SampleCfg(name='data_2017', 
-            dir_name='DDE', 
-            ana_dir=analysis_dir+bkg_dir, 
-            tree_prod_name='added_trees', 
-            is_data=True),                                          
+        SampleCfg(name='2017B_sfr_012', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, weight_expr='ft1.fover1minusf012'),     
+#        SampleCfg(name='2017B_sfr_021', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, weight_expr='fover1minusf021'),     
+        SampleCfg(name='2017B_dfr',     dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_doublefake=True, weight_expr='ft2.fover1minusf021'),     
     ]
+
+#    samples_data_dde = [
+#        SampleCfg(name='data_2017', 
+#            dir_name='DDE', 
+#            ana_dir=analysis_dir+bkg_dir, 
+#            tree_prod_name='added_trees', 
+#            is_data=True),                                          
+#    ]
 
 
     #Temporal data 
     samples_data = [
         SampleCfg(name='data_2017B', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents =  5265969 
-        SampleCfg(name='data_2017C', dir_name=dataC.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10522062 
-        SampleCfg(name='data_2017D', dir_name=dataD.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                           #nevents =  3829353
-        SampleCfg(name='data_2017E', dir_name=dataE.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10926946 
-        SampleCfg(name='data_2017F', dir_name=dataF.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 19122658 ; SUM of BCDEF = 49'666'988
+#       SampleCfg(name='data_2017C', dir_name=dataC.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10522062 
+#       SampleCfg(name='data_2017D', dir_name=dataD.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                           #nevents =  3829353
+#       SampleCfg(name='data_2017E', dir_name=dataE.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10926946 
+#       SampleCfg(name='data_2017F', dir_name=dataF.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 19122658 ; SUM of BCDEF = 49'666'988
     ]
+    print '\n\tdata sample defined, normcut =', add_data_cut
 
     # # define all sample configurations
     # samples_mc  = samples_essential + samples_additional 
@@ -305,8 +308,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
             sample.scale = sample.scale * signal_scale
 
     samples_DY = [
-            SampleCfg(name='DYJetsToLL_M10to50',dir_name=DYJetsToLL_M10to50.name, ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M10to50.xSection, sumweights=DYJetsToLL_M10to50.nGenEvents, is_DY=True),
-            SampleCfg(name='DYJets_ext'       , dir_name=DYJetsToLL_M50_ext.name, ana_dir='/work/dezhu/4_production/production_20190306_BkgMC/mmm/ntuples/', tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents, is_DY=True),
+            SampleCfg(name='DYJetsToLL_M10to50',dir_name=DYJetsToLL_M10to50.name, ana_dir='/eos/user/d/dezhu/HNL/ntuples/HN3Lv2.0/background/montecarlo/production20190318/mmm/ntuples/', tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M10to50.xSection, sumweights=DYJetsToLL_M10to50.nGenEvents, is_DY=True),
+            SampleCfg(name='DYJets_ext'       , dir_name=DYJetsToLL_M50_ext.name, ana_dir='/eos/user/d/dezhu/HNL/ntuples/HN3Lv2.0/background/montecarlo/production20190318/mmm/ntuples/', tree_prod_name=tree_prod_name, xsec=DYJetsToLL_M50_ext.xSection, sumweights=DYJetsToLL_M50_ext.nGenEvents, is_DY=True),
             # SampleCfg(name='TTJets_amc'       , dir_name=TTJets_amcat      .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=TTJets_amcat      .xSection, sumweights=TTJets_amcat      .nGenEvents, is_MC=True),
             # SampleCfg(name='ZZTo4L'           , dir_name=ZZTo4L            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L            .xSection, sumweights=ZZTo4L            .nGenEvents, is_MC=True),
             # SampleCfg(name='WZTo3LNu'         , dir_name=WZTo3LNu          .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu          .xSection, sumweights=WZTo3LNu          .nGenEvents, is_MC=True),
@@ -339,7 +342,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         ]
 
     # samples_DY_data = samples_DY + samples_conversion + samples_data 
-    samples_DY_data = samples_DY + samples_data 
+    samples_DY_data = samples_DY + samples_data #+ samples_data_dde 
     # samples_DY_data = samples_DY + samples_conversion 
     # samples_DY_data = samples_conversion 
     # samples_DY_data = samples_DY
@@ -350,9 +353,9 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 
 
 def setSumWeights(samples, weight_dir='SkimAnalyzerCount', norm=True):
-    print '###########################################################'
-    print '# setting sum weights for the samples...'
-    print '###########################################################'
+    print '\n\t###########################################################'
+    print '\n\t# setting sum weights for the samples...'
+    print '\n\t###########################################################'
 
     
     # RM: this is needed to retrieve the sum of weights *before* any selection
@@ -434,15 +437,15 @@ def setSumWeights(samples, weight_dir='SkimAnalyzerCount', norm=True):
         except:
             set_trace()
 
-#         print 'A: Set sum weights for sample', sample.name, 'to', sample.sumweights        
+#         print '\n\tA: Set sum weights for sample', sample.name, 'to', sample.sumweights        
         if sample.name in weighted_list:
             # sample.sumweights *= initial_weights[sample.name]
-            print 'Set sum weights for sample', sample.name, 'to', sample.sumweights
-            # print 'Sum weights from sample', sample.name, 'in weighted_list: ', sample.sumweights
+            print '\n\tSet sum weights for sample', sample.name, 'to', sample.sumweights
+            # print '\n\tSum weights from sample', sample.name, 'in weighted_list: ', sample.sumweights
 
         if sample.name not in weighted_list:
 #            pass # turn this off later, for NLO or higher order samples
-            # print 'Set sum weights for sample', sample.name, 'to', sample.sumweights
+            # print '\n\tSet sum weights for sample', sample.name, 'to', sample.sumweights
             # setSumWeights(sample, 'SkimAnalyzerCount', False)
 
             if sample.is_dde == False:
@@ -458,14 +461,14 @@ def setSumWeights(samples, weight_dir='SkimAnalyzerCount', norm=True):
                         if 'Sum Weights' in counters:
                             sample.sumweights = counters['Sum Weights']
                 except IOError:
-                    print 'Warning: could not find sum weights information for sample', sample.name
+                    print '\n\tWarning: could not find sum weights information for sample', sample.name
                     pass
 
             # if sample.is_dde == True:
                 # set_trace()
                 # sample.sumweights *=50000 
-                # print 'sample ' + sample.dir_name + 'has been set to ', sample.sumweights
+                # print '\n\tsample ' + sample.dir_name + 'has been set to ', sample.sumweights
 
-            print 'Sum weights from sample',sample.name, 'not in weighted_list. Setting it to', sample.sumweights
+            print '\n\tSum weights from sample',sample.name, 'not in weighted_list. Setting it to', sample.sumweights
 
     return samples
