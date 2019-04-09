@@ -6,11 +6,14 @@ __init__.py
 *_david*
 *job_desc.cfg
 
+
 # C extensions
 *.so
 
 # FOLDERS
 plotting/Plots/*
+    # CRAB
+crab/crab*
 
 # HEPPY
 tmp_heppy.py

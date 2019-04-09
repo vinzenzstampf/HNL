@@ -244,10 +244,14 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
   
 
     samples_data_dde = [
-        SampleCfg(name='2017B_sfr_012', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, weight_expr='ft1.fover1minusf012'),     
-#        SampleCfg(name='2017B_sfr_021', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, weight_expr='fover1minusf021'),     
-        SampleCfg(name='2017B_dfr',     dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_doublefake=True, weight_expr='ft2.fover1minusf021'),     
+        SampleCfg(name='2017B_sfr_012', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, weight_expr='sfr_012.fover1minusf012'),     
+        #SampleCfg(name='2017B_sfr_021', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, weight_expr='sfr_021.fover1minusf021'),     
+        SampleCfg(name='2017B_dfr',     dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_doublefake=True, weight_expr=    'dfr.fover1minusf021'),     
     ]
+
+
+
+   
 
 #    samples_data_dde = [
 #        SampleCfg(name='data_2017', 
@@ -342,7 +346,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
         ]
 
     # samples_DY_data = samples_DY + samples_conversion + samples_data 
-    samples_DY_data = samples_DY + samples_data #+ samples_data_dde 
+    samples_DY_data = samples_DY + samples_data + samples_data_dde 
     # samples_DY_data = samples_DY + samples_conversion 
     # samples_DY_data = samples_conversion 
     # samples_DY_data = samples_DY

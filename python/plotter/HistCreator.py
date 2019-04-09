@@ -256,7 +256,7 @@ class CreateHists(object):
             # Implement the multidraw.
             # set_trace()
             try:
-                print '\n\tdrawing...'# %s with the following cut: '%(cfg.name) + norm_cut
+                print '\n\tdrawing histograms for %s...'%cfg.name# %s with the following cut: '%(cfg.name) + norm_cut
                 #print '\n\tdrawing %s with the following cut: '%(cfg.name) + norm_cut
                 ttree.MultiDraw(var_hist_tuples, norm_cut)
             except:
@@ -298,6 +298,6 @@ class CreateHists(object):
                     if (not cfg.is_data) and (not cfg.is_dde):
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
                         # plot_hist.SetWeight(1)
-            print '\n\tadded histograms for %s'%cfg.name
+            print '\n\tadded histograms for %s.'%cfg.name
             PLOTS = self.plots
         return PLOTS

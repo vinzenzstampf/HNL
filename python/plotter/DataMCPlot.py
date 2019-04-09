@@ -27,7 +27,7 @@ fakerate_tree['2017B_mmm_sfr_021'] = '/eos/user/v/vstampf/plots/DDE/friendTree_m
 fakerate_tree['2017B_mmm_dfr']     = '/eos/user/v/vstampf/plots/DDE/friendTree_mmm_190403_17h_41m/fr_dfr_fake.root' 
 
 friend_trees = OrderedDict()
-friend_trees['2017B_mmm'] = {'sfr_012':fakerate_tree['2017B_mmm_sfr_012'], 'sfr_012':fakerate_tree['2017B_mmm_sfr_012'], 'dfr_012':fakerate_tree['2017B_mmm_dfr']}
+friend_trees['2017B_mmm'] = {'sfr_012':fakerate_tree['2017B_mmm_sfr_012'], 'sfr_012':fakerate_tree['2017B_mmm_sfr_012'], 'dfr':fakerate_tree['2017B_mmm_dfr']}
 
 class DataMCPlot(object):
 
@@ -89,13 +89,12 @@ class DataMCPlot(object):
 
         friend_list = self.getFriendTrees(file_name)
         if friend_list:
-            for j, friend_name in enumerate(friend_list.keys()):
+            for friend_name in friend_list.keys():
                 friend_tree = self.readTree(friend_list[friend_name], tree_name, verbose)
-                try: ttree.AddFriend(friend_tree, 'ft%d'%j)
+                try: ttree.AddFriend(friend_tree, friend_name)
                 except: set_trace()
-                print '\n\thappy tree friend added: ft%d'%j, friend_list[friend_name]
                 if verbose:
-                    print '\n\tsuccess: happy tree friend added:', friend_list[friend_name]
+                    print '\n\thappy tree friend added:', friend_name, friend_list[friend_name]
 
         gROOT.cd()
 

@@ -44,7 +44,7 @@ pickle(MethodType, _pickle_method, _unpickle_method)
 
 gr.SetBatch(True) # NEEDS TO BE SET FOR MULTIPROCESSING OF plot.Draw()
 
-int_lumi = 41000.0 # pb #### FIXME 
+int_lumi = 4792 #<-- only 2017B #41000.0 # pb #### FIXME 
 # int_lumi = 1000.0 # pb #### FIXME 
 # int_lumi = 41000.0 * (3829353/49666988) # serves only for era B and mmm
 # int_lumi = 41000.0 * (30564478/19122658) # [pb]; adapt to the amount of events done for the nonprompt analysis
