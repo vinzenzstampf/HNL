@@ -46,13 +46,13 @@ class CreateHists(object):
         config; this version handles multiple variables via MultiDraw.
         '''
         
-        print('###########################################################')
-        print('# creating histograms for %i sample(s)...'%len(self.hist_cfg.cfgs))
+        print '\n\t###########################################################'
+        print '\t# creating histograms for %i sample(s)...'%len(self.hist_cfg.cfgs)
         if multiprocess == True:
-            print('# multiprocess-mode: ON')
+            print '\t# multiprocess-mode: ON'
         if multiprocess == False:
-            print('# multiprocess-mode: OFF')
-        print('###########################################################')
+            print '\t# multiprocess-mode: OFF'
+        print '\t###########################################################'
 
         if multiprocess == True:
             #using multiprocess to create the histograms
@@ -71,7 +71,7 @@ class CreateHists(object):
 
         for i, cfg in enumerate(self.hist_cfg.cfgs):
             stack = not cfg.is_data and not cfg.is_signal
-#            print(cfg.name, stack)
+#            print cfg.name, stack
             for vcfg in self.vcfgs:
                 try:
                     hist = result[i][vcfg.name].histos[0].obj # result[0]['CR_hnl_m_12'].histos[0]
@@ -86,29 +86,29 @@ class CreateHists(object):
                 if cfg.name in plot:
                     # print '\n\tHistogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
-                    if verbose: print '\n\tsample:', cfg.name, 'is_data:', cfg.is_data, 'is_singlefake:', cfg.is_singlefake, 'is_doublefake:', cfg.is_doublefake
+                    if verbose: print '\n\tsample: %s, is_data: %s, is_singlefake: %s, is_doublefake: %s' %(cfg.name, cfg.is_data, cfg.is_singlefake, cfg.is_doublefake)
                     if not cfg.is_data and not cfg.is_singlefake and not cfg.is_doublefake: # VS 04/09 is_dde -> single or double fake
                         hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
                     plot[cfg.name].Add(hist_to_add)
                 else:
-#                    print(cfg.name, hist.GetEntries(), stack)
+#                    print cfg.name, hist.GetEntries(), stack
                     plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
-#                    print('added histo %s'%vcfg.name)
+#                    print '\n\tadded histo %s'%vcfg.name
 
 
                     if not cfg.is_data and not cfg.is_singlefake and not cfg.is_doublefake: # VS 04/09 is_dde -> single or double fake
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
-#                print(cfg.name, vcfg.name, len(plot.histos))
+#                print cfg.name, vcfg.name, len(plot.histos)
     
-        print('###########################################################')
-        print('# initializing histos done, making stacks...')
+        print '\n\t###########################################################'
+        print '\t# initializing histos done, making stacks...'
         for plot in self.plots.itervalues():
             try:
                 plot._ApplyPrefs()
             except:
                 set_trace() #if this error is raised, check in HNLStyle.py whether the style is defined coffectly
-        print('# number of plots to draw: %i'%len(self.plots))
-        print('###########################################################')
+        print '\t# number of plots to draw: %i'%len(self.plots)
+        print '\t###########################################################'
 
 
         procs = []
@@ -133,12 +133,12 @@ class CreateHists(object):
             # First check whether it's a sub-histo or not
         if isinstance(cfg, HistogramCfg):
             hists = createHistograms(cfg, all_stack=True, vcfgs=self.vcfgs)
-            for h in hists: print(h)
+            for h in hists: print h
             for vcfg in self.vcfgs:
                 hist = hists[vcfg.name]
                 plot = self.plots[vcfg.name]
                 hist._BuildStack(hist._SortedHistograms(), ytitle='Events')
-                print('stack built')
+                print '\n\tstack built'
                 total_hist = plot.AddHistogram(cfg.name, hist.stack.totalHist.weighted, stack=True)
 
                 if cfg.norm_cfg is not None:
@@ -150,7 +150,7 @@ class CreateHists(object):
                     total_hist.Scale(cfg.total_scale)
                     # print '\n\tScaling total', hist_cfg.name, 'by', cfg.total_scale
         else:
-            # print('building histgrams for %s'%cfg.name)
+            # print '\n\tbuilding histgrams for %s'%cfg.name
             # It's a sample cfg
 
             # Now read the tree
@@ -211,7 +211,7 @@ class CreateHists(object):
                 norm_cut = '({c}) * {we}'.format(c=norm_cut, we=weight)
                 shape_cut = '({c}) * {we}'.format(c=shape_cut, we=weight)
 
-            print '\n\n\tcfg:', cfg.name, '\n\tweight:', weight, '\n\tnorm_cut:', norm_cut
+            print '\n\tcfg:', cfg.name, '\n\tweight:', weight,\n\tnorm_cut:', norm_cut, cfg.name, norm_cut
 
 
 
@@ -279,6 +279,7 @@ class CreateHists(object):
 
             # Loop again over the variables and add histograms to self.plots one by one
             for vcfg in self.vcfgs:
+                if verbose: print '\n\thist:', vcfg.name
                 hist = hists[vcfg.name]
                 plot = self.plots[vcfg.name]
 
@@ -289,19 +290,18 @@ class CreateHists(object):
                     hist_to_add = Histogram(cfg.name, hist)
                     if not cfg.is_data and not cfg.is_singlefake and not cfg.is_doublefake: # VS 04/09 is_dde -> single or double fake
                         hist_to_add.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
-                        if verbose: print '\n\tsample:', cfg.name, 'weight:', self.hist_cfg.lumi*cfg.xsec/cfg.sumweights
                         # hist_to_add.SetWeight(1)
     
                     plot[cfg.name].Add(hist_to_add)
                 else:
-#                    print(cfg.name, hist.GetEntries(), stack)
+#                    print cfg.name, hist.GetEntries(), stack
                     plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
-#                    print('added histo %s for %s'%(vcfg.name,cfg.name))
+#                    print '\n\tadded histo %s for %s'%(vcfg.name,cfg.name)
 
                     if not cfg.is_data and not cfg.is_singlefake and not cfg.is_doublefake: # VS 04/09 is_dde -> single or double fake
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
-                        if verbose: print '\n\tsample:', cfg.name, 'weight:', self.hist_cfg.lumi*cfg.xsec/cfg.sumweights
                         # plot_hist.SetWeight(1)
+            if verbose: print '\n\tsample:', cfg.name, 'weight:', self.hist_cfg.lumi*cfg.xsec/cfg.sumweights
             print '\n\tadded histograms for %s.'%cfg.name
             PLOTS = self.plots
         return PLOTS

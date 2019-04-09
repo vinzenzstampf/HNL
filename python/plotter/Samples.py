@@ -270,7 +270,6 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 #       SampleCfg(name='data_2017E', dir_name=dataE.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 10926946 
 #       SampleCfg(name='data_2017F', dir_name=dataF.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=True, norm_cut=add_data_cut),                                         #nevents = 19122658 ; SUM of BCDEF = 49'666'988
     ]
-    print '\n\tdata sample defined, normcut =', add_data_cut
 
     # # define all sample configurations
     # samples_mc  = samples_essential + samples_additional 
@@ -318,6 +317,7 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
             # SampleCfg(name='ZZTo4L'           , dir_name=ZZTo4L            .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=ZZTo4L            .xSection, sumweights=ZZTo4L            .nGenEvents, is_MC=True),
             # SampleCfg(name='WZTo3LNu'         , dir_name=WZTo3LNu          .name, ana_dir=analysis_dir+bkg_dir, tree_prod_name=tree_prod_name, xsec=WZTo3LNu          .xSection, sumweights=WZTo3LNu          .nGenEvents, is_MC=True),
             ]
+
     samples_conversion = [
         # SampleCfg(name='Conversion_DYBB', 
             # dir_name=DYBB.name, 
@@ -347,6 +347,8 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
 
     # samples_DY_data = samples_DY + samples_conversion + samples_data 
     samples_DY_data = samples_DY + samples_data + samples_data_dde 
+    samples_DY_data = samples_data + samples_data_dde 
+    samples_DY_data = samples_DY + samples_data
     # samples_DY_data = samples_DY + samples_conversion 
     # samples_DY_data = samples_conversion 
     # samples_DY_data = samples_DY
@@ -444,7 +446,7 @@ def setSumWeights(samples, weight_dir='SkimAnalyzerCount', norm=True):
 #         print '\n\tA: Set sum weights for sample', sample.name, 'to', sample.sumweights        
         if sample.name in weighted_list:
             # sample.sumweights *= initial_weights[sample.name]
-            print '\n\tSet sum weights for sample', sample.name, 'to', sample.sumweights
+            print '\n\tSet sum weights for sample %s to %d'%(sample.name, sample.sumweights)
             # print '\n\tSum weights from sample', sample.name, 'in weighted_list: ', sample.sumweights
 
         if sample.name not in weighted_list:
@@ -465,7 +467,7 @@ def setSumWeights(samples, weight_dir='SkimAnalyzerCount', norm=True):
                         if 'Sum Weights' in counters:
                             sample.sumweights = counters['Sum Weights']
                 except IOError:
-                    print '\n\tWarning: could not find sum weights information for sample', sample.name
+                    print '\n\tWarning: could not find sum weights information for sample %s'%sample.name
                     pass
 
             # if sample.is_dde == True:
@@ -473,6 +475,6 @@ def setSumWeights(samples, weight_dir='SkimAnalyzerCount', norm=True):
                 # sample.sumweights *=50000 
                 # print '\n\tsample ' + sample.dir_name + 'has been set to ', sample.sumweights
 
-            print '\n\tSum weights from sample',sample.name, 'not in weighted_list. Setting it to', sample.sumweights
+            print '\n\tSum weights from sample %s not in weighted_list. Setting it to %d' %(sample.name, sample.sumweights)
 
     return samples

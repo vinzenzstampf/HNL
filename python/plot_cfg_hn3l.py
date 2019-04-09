@@ -60,9 +60,9 @@ def prepareRegions(channel):
     regions.append(Region('DY_test','mmm','CR_DY_test'))
     # regions.append(Region('DY_test_l2Iso','mmm','CR_DY_test'))
 
-    print('###########################################################')
-    print('# setting analysis regions')
-    print('###########################################################')
+    print '\n\t###########################################################'
+    print '\t# setting analysis regions'
+    print '\t###########################################################'
 
     for r in regions: print r.name
 
@@ -70,7 +70,7 @@ def prepareRegions(channel):
 
 def createSamples(channel, analysis_dir, total_weight, server, add_data_cut=None):
     sample_dict = {}
-    print "creating samples from %s"%(analysis_dir)
+    print "\n\tcreating samples from %s"%(analysis_dir)
     samples_mc, samples_signal_mc, samples_data, samples, all_samples_dde, all_samples_mc, sampleDict, samples_essential, samples_essential_data, samples_dde, samples_data_dde, samples_dde_data, samples_bkg, samples_DY_data = createSampleLists(analysis_dir=analysis_dir, server = server, channel=channel, add_data_cut=add_data_cut)
 
     #select here the samples you wish to use
@@ -90,11 +90,11 @@ def createSamples(channel, analysis_dir, total_weight, server, add_data_cut=None
     sample_dict['working_samples'] = working_samples
 
     #TODO implement a code to print the samples
-    print('###########################################################')
-    print'# samples to be used:'
-    print('###########################################################')
-    for w in working_samples: print w.name + ', ',
-    print '\n\t(%d sample(s))'%(len(working_samples))
+    print '\n\t###########################################################'
+    print '\t# samples to be used:'
+    print '\t###########################################################'
+    for w in working_samples: print '\n\t%s' %w.name
+    print '\t(%d sample(s))'%(len(working_samples))
 
     return sample_dict
 
@@ -119,9 +119,9 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
         regionDir = plotDir+region.name
         if not os.path.exists(regionDir):
             os.mkdir(regionDir)
-            print "Directory ", regionDir, "Created "
+            print "\n\tDirectory %s created." % regionDir
         else:
-            print "Directory ", regionDir, "already exists, overwriting it!"
+            print "\n\tDirectory %s already exists, overwriting it!" %regionDir
             os.system("rm -rf %s"%(regionDir))
             os.system("mkdir %s"%(regionDir))
 
@@ -166,15 +166,15 @@ def makePlots(plotDir,channel_name,variables, regions, total_weight, sample_dict
         vals = [v for v in all_vals if sample_name + '_' in v[0]]
         vals.sort(key=itemgetter(1))
         for key, item in vals:
-            print item, key
+            print '\n\t%s %s' %(item, key)
 
-        print '\n\t\nBy variable'
+        print '\n\tBy variable'
         for variable in variables:
             name = variable.name
-            print '\n\t\nResults for variable', name
+            print '\n\tResults for variable %s' %name
             for key, item in vals:
                 if key.startswith(name + '__'):
-                    print item, key
+                    print '\n\t%s %s' %(item, key)
 
 
 def producePlots(promptLeptonType, L1L2LeptonType, server):
@@ -222,7 +222,7 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
     total_weight = 'weight * lhe_weight'
     # total_weight = '1'
 
-    print total_weight
+    print '\n\ttotal_weight: %s' %total_weight
 
     regions = prepareRegions(channel)
     
@@ -250,8 +250,8 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         copyfile('/afs/cern.ch/user/v/vstampf/CMSSW_9_4_6_patch1/src/CMGTools/HNL/plotting/plot_cfg_hn3l_'+channel+'.py', plotDir+i.name+'/plot_cfg.py')
         copyfile('/afs/cern.ch/user/v/vstampf/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plot_cfg_hn3l.py', plotDir+i.name+'/plot_cfg_base.py')
         copyfile('/afs/cern.ch/user/v/vstampf/CMSSW_9_4_6_patch1/src/CMGTools/HNL/python/plotter/Selections.py', plotDir+i.name+'/Selections.py')
-        print '\n\tcfg file stored in "', plotDir + i.name + '/plot_cfg.py"'
-        print '\n\tcfg_base file stored in "', plotDir + i.name + '/plot_cfg_base.py"'
+        print '\n\tcfg file stored in "%s/plot_cfg.py"' %( plotDir + i.name)
+        print '\n\tcfg_base file stored in "%s/plot_cfg_base.py"' %(plotDir + i.name)
         # copytree(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)
         #os.system("cp -rf %s %s"%(plotDir+i.name,'/t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm/'+i.name)) 
         #print '\n\tdirectory %s copied to /t3home/dezhu/eos/t3/figures/1_DataMC/FinalStates/mmm!'%(i.name)
