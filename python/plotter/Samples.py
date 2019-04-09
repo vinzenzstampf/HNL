@@ -244,9 +244,9 @@ def createSampleLists(analysis_dir='/eos/user/v/vstampf/ntuples/',
   
 
     samples_data_dde = [
-        SampleCfg(name='2017B_sfr_012', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, weight_expr='sfr_012.fover1minusf012'),     
+        SampleCfg(name='2017B_sfr_012', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, is_dde=True, weight_expr='sfr_012.fover1minusf012'),     
         #SampleCfg(name='2017B_sfr_021', dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_singlefake=True, weight_expr='sfr_021.fover1minusf021'),     
-        SampleCfg(name='2017B_dfr',     dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_doublefake=True, weight_expr=    'dfr.fover1minusf021'),     
+        SampleCfg(name='2017B_dfr',     dir_name=dataB.name, ana_dir=data_dir, tree_prod_name=tree_prod_name, is_data=False, norm_cut=add_data_cut, is_doublefake=True, is_dde=True, weight_expr=    'dfr.fover1minusf021'),     
     ]
 
 
@@ -452,7 +452,7 @@ def setSumWeights(samples, weight_dir='SkimAnalyzerCount', norm=True):
             # print '\n\tSet sum weights for sample', sample.name, 'to', sample.sumweights
             # setSumWeights(sample, 'SkimAnalyzerCount', False)
 
-            if sample.is_dde == False:
+            if 1==1: ## VS 04/09: applies also to DDE
                 pckfile = '/'.join([sample.ana_dir, sample.dir_name, weight_dir, 'SkimReport.pck'])
                 try:
                     pckobj = pickle.load(open(pckfile, 'r'))

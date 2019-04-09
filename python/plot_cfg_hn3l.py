@@ -241,7 +241,7 @@ def producePlots(promptLeptonType, L1L2LeptonType, server):
         total_weight, 
         sample_dict, 
         make_plots=True,
-        multiprocess=False
+        multiprocess=True
     )
 
     for i in regions:

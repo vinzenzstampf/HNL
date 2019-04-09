@@ -86,7 +86,8 @@ class CreateHists(object):
                 if cfg.name in plot:
                     # print '\n\tHistogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
-                    if (not cfg.is_data) and (not cfg.is_dde):
+                    if verbose: print '\n\tsample:', cfg.name, 'is_data:', cfg.is_data, 'is_singlefake:', cfg.is_singlefake, 'is_doublefake:', cfg.is_doublefake
+                    if not cfg.is_data and not cfg.is_singlefake and not cfg.is_doublefake: # VS 04/09 is_dde -> single or double fake
                         hist_to_add.SetWeight(hist_cfg.lumi*cfg.xsec/cfg.sumweights)
                     plot[cfg.name].Add(hist_to_add)
                 else:
@@ -95,7 +96,7 @@ class CreateHists(object):
 #                    print('added histo %s'%vcfg.name)
 
 
-                    if (not cfg.is_data) and (not cfg.is_dde):
+                    if not cfg.is_data and not cfg.is_singlefake and not cfg.is_doublefake: # VS 04/09 is_dde -> single or double fake
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
 #                print(cfg.name, vcfg.name, len(plot.histos))
     
@@ -265,6 +266,7 @@ class CreateHists(object):
 
             # Do another multidraw here, if needed, and reset the scales in a separate loop
             if shape_cut != norm_cut:
+                if verbose: print '\n\tsample:', cfg.name, 'shape_cut:', shape_cut, 'norm_cut', norm_cut
                 scale = hist.Integral()
                 ttree.Project(hname, vcfg.drawname, shape_cut)
                 try:
@@ -285,8 +287,9 @@ class CreateHists(object):
                 if cfg.name in plot:
                     # print '\n\tHistogram', cfg.name, 'already exists; adding...', cfg.dir_name
                     hist_to_add = Histogram(cfg.name, hist)
-                    if (not cfg.is_data) and (not cfg.is_dde):
+                    if not cfg.is_data and not cfg.is_singlefake and not cfg.is_doublefake: # VS 04/09 is_dde -> single or double fake
                         hist_to_add.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                        if verbose: print '\n\tsample:', cfg.name, 'weight:', self.hist_cfg.lumi*cfg.xsec/cfg.sumweights
                         # hist_to_add.SetWeight(1)
     
                     plot[cfg.name].Add(hist_to_add)
@@ -295,8 +298,9 @@ class CreateHists(object):
                     plot_hist = plot.AddHistogram(cfg.name, hist, stack=stack)
 #                    print('added histo %s for %s'%(vcfg.name,cfg.name))
 
-                    if (not cfg.is_data) and (not cfg.is_dde):
+                    if not cfg.is_data and not cfg.is_singlefake and not cfg.is_doublefake: # VS 04/09 is_dde -> single or double fake
                         plot_hist.SetWeight(self.hist_cfg.lumi*cfg.xsec/cfg.sumweights)
+                        if verbose: print '\n\tsample:', cfg.name, 'weight:', self.hist_cfg.lumi*cfg.xsec/cfg.sumweights
                         # plot_hist.SetWeight(1)
             print '\n\tadded histograms for %s.'%cfg.name
             PLOTS = self.plots
