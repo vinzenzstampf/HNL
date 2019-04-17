@@ -1,7 +1,6 @@
 from math import sqrt
 
 from itertools import combinations, product
-# from copy import deepcopy as dc
 
 from PhysicsTools.HeppyCore.utils.deltar import deltaR, deltaPhi
 from ROOT import TVector3, Math
@@ -13,7 +12,9 @@ class DiLepton(object):
     '''
     '''
     def __init__(self, pair, sv, pv, bs):
-        self._leptons = sorted(pair, key = lambda x : x.pt(), reverse = True)
+        # self._leptons = sorted(pair, key = lambda lep : (-abs(lep.pdgId()),lep.pt()), reverse = True)
+        self._leptons = pair
+
         self._vtx = sv
         self._pv  = pv
         self._bs  = bs
@@ -67,9 +68,6 @@ class DiLepton(object):
 
     def mass(self):
         return self.p4().mass()
-
-    def vtx(self):
-        return self.vtx
 
     def deta(self):
         return abs(self.lep1().eta() - self.lep2().eta()) 
