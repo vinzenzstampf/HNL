@@ -4,12 +4,12 @@ from CMGTools.HNL.hn3l_cfg import *
 from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F
 from CMGTools.HNL.samples.samples_mc_2017_noskim import TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
 
-samples = [TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ]
+samples = [DYJetsToLL_M50_ext, TTJets, WJetsToLNu_ext, DYJetsToLL_M50, WJetsToLNu, DYBB, DYJetsToLL_M10to50]#, WW, WZ, ZZ]
 # samples = [Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F]
 
 
 # edit the lines here to specify your ntuple production mode production         = False # state whether you're running production mode or not
-production         = True # state whether you're running production mode or not
+production         = False # state whether you're running production mode or not
 isData             = False
 isSignal           = False
 promptLeptonType   = "mu" # choose from 'ele', 'mu'
