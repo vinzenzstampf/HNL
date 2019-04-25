@@ -64,6 +64,10 @@ instance/
 # Sphinx documentation
 docs/_build/
 
+# folders
+cfg/crab/crab*
+cfg/crab_old/crab*
+
 # PyBuilder
 target/
 
