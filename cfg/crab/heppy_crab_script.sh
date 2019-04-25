@@ -19,15 +19,15 @@ tar xzf cafpython.tar.gz --directory $CMSSW_BASE
 #echo $ROOTSYS
 
 # copy auxiliarity data to the right place (json, pu, lep eff, jet corr, ...)
-cp -r lib/* $CMSSW_BASE/lib/
-mkdir $CMSSW_BASE/src/CMGTools/
-cp -r src/CMGTools/* $CMSSW_BASE/src/CMGTools/
-for i in `find src/ -name data -type d`
-do
-    echo $i
-    mkdir -p  $CMSSW_BASE/$i
-    cp -r $i/* $CMSSW_BASE/$i
-done
+#cp -r lib/* $CMSSW_BASE/lib/
+#mkdir $CMSSW_BASE/src/CMGTools/
+#cp -r src/CMGTools/* $CMSSW_BASE/src/CMGTools/
+#for i in `find src/ -name data -type d`
+#do
+#    echo $i
+#    mkdir -p  $CMSSW_BASE/$i
+#    cp -r $i/* $CMSSW_BASE/$i
+#done
 
 # copy python files to src/ and create soft links in python/
 # due to problem with PhysicsTools.PatAlgos.tools.jetTools where FWCore.GuiBrowsers.ConfigToolBase looks for a '/src/' string
