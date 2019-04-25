@@ -31,6 +31,13 @@ wheels/
 *.manifest
 *.spec
 
+#temporary
+tmp*
+*.swp
+.*
+
+*Output*
+
 # Installer logs
 pip-log.txt
 pip-delete-this-directory.txt

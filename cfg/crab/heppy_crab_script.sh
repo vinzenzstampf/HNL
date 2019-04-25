@@ -19,15 +19,17 @@ tar xzf cafpython.tar.gz --directory $CMSSW_BASE
 #echo $ROOTSYS
 
 # copy auxiliarity data to the right place (json, pu, lep eff, jet corr, ...)
-#cp -r lib/* $CMSSW_BASE/lib/
-#mkdir $CMSSW_BASE/src/CMGTools/
-#cp -r src/CMGTools/* $CMSSW_BASE/src/CMGTools/
-#for i in `find src/ -name data -type d`
-#do
-#    echo $i
-#    mkdir -p  $CMSSW_BASE/$i
-#    cp -r $i/* $CMSSW_BASE/$i
-#done
+cp -r lib/* $CMSSW_BASE/lib/
+echo mkdir $CMSSW_BASE/src/CMGTools/
+mkdir $CMSSW_BASE/src/CMGTools/
+echo cp -r src/CMGTools/* $CMSSW_BASE/src/CMGTools/
+cp -r src/CMGTools/* $CMSSW_BASE/src/CMGTools/
+for i in `find src/ -name data -type d`
+do
+    echo $i
+    mkdir -p  $CMSSW_BASE/$i
+    cp -r $i/* $CMSSW_BASE/$i
+done
 
 # copy python files to src/ and create soft links in python/
 # due to problem with PhysicsTools.PatAlgos.tools.jetTools where FWCore.GuiBrowsers.ConfigToolBase looks for a '/src/' string
@@ -47,4 +49,7 @@ fi
 
 #ls -lR 
 
+#echo "do basically nothing, see if it works till here"
+echo "now check if things really work..."
 python heppy_crab_script.py $@
+echo "this output comes after executing heppy_crab_script.py $@"

@@ -2,9 +2,6 @@
 import imp, os, json
 from optparse import OptionParser,OptionGroup
 
-### auto-monitoring tool
-os.system("python crabMonitoring.py 1")
-
 parser = OptionParser()
 
 g1 = OptionGroup(parser,"Heppy options")
@@ -20,7 +17,7 @@ g2.add_option("-l", "--production-label", dest="production_label", help="heppy_c
 g2.add_option("-v", "--cmg-version", dest="cmg_version", help="CMGTools version used", default="myCMGTools-from-CMSSW_X_Y_Z")
 g2.add_option("-u", "--unpackFile", dest="filesToUnpack", type="string", action="append", default=[], help="Files to unpack when staging out (relative to output directory)")
 parser.add_option_group(g2)
-g2.add_option("--only-unpacked", dest="only_unpacked", default=False, action="store_true", help="Only return the unpacked files, not the whole compressed output directory")
+g2.add_option("--only-unpacked", dest="only_unpacked", default=True, action="store_true", help="Only return the unpacked files, not the whole compressed output directory")
 
 parser.add_option("-n", "--dryrun", dest="dryrun", action="store_true",default=False, help="dryrun")
 parser.add_option("-w", "--siteWhitelist", dest="siteWhitelist", type="string", action="append", default=[], help="Sites whitelist (default is using the one in heppy_crab_config.py)")
@@ -53,6 +50,9 @@ handle.close()
 os.system("tar czf python.tar.gz --dereference --directory $CMSSW_BASE python")
 os.system("tar czf cmgdataset.tar.gz --directory $HOME .cmgdataset")
 os.system("tar czf cafpython.tar.gz --directory /afs/cern.ch/cms/caf/ python")
+
+# copy the tar balls to $HOME to check them later
+#os.system("cp *tar* $HOME/std_tarball/")
 
 os.environ["PROD_LABEL"]  = options.production_label
 os.environ["CMG_VERSION"] = options.cmg_version
