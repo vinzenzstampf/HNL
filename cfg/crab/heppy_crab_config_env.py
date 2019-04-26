@@ -7,6 +7,7 @@ file = open( "heppy_crab_config.py", 'r' )
 cfg = imp.load_source( 'cfg', "heppy_crab_config.py", file)
 config = cfg.config
 
+# this line is only interesting if manual splitting is provided
 print "Will send dataset", os.environ["DATASET"], "with", os.environ["NJOBS"], "jobs"
 
 config.General.requestName = os.environ["DATASET"] + "_" + os.environ["CMG_VERSION"] # task name
@@ -15,6 +16,10 @@ config.General.workArea = 'crab_' + os.environ["DATASET"] + "_" + os.environ["PR
 # this will divide task in *exactly* NJOBS jobs (for this we need JobType.pluginName = 'PrivateMC' and Data.splitting = 'EventBased')
 config.Data.unitsPerJob = 10
 config.Data.totalUnits = config.Data.unitsPerJob * int(os.environ["NJOBS"])
+
+# for Data.splitting = 'Automatic' put a number in [180, 2700] (minutes)
+# config.Data.unitsPerJob = 180
+# config.Data.totalUnits = int(os.environ['TOTAL_EVENTS'])
 
 config.JobType.inputFiles.append(os.environ["CFG_FILE"])
 # arguments to pass to scriptExe. They have to be like "arg=value". 

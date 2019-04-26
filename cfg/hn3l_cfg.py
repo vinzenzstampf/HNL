@@ -1,16 +1,30 @@
-from CMGTools.HNL.samples.samples_data_2017_noskim import Single_mu_2017, Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F
-from CMGTools.HNL.samples.samples_mc_2017_noskim import TTJets, WJetsToLNu, WJetsToLNu_ext, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
+from CMGTools.HNL.samples.samples_data_2017_noskim import *
+from CMGTools.HNL.samples.samples_mc_2017_noskim import *
+import os
 from optparse import OptionParser,OptionGroup
+from pdb import set_trace
 
 samples = [DYBB]#DYJetsToLL_M50_ext, TTJets, WJetsToLNu_ext, DYJetsToLL_M50, WJetsToLNu, DYBB, DYJetsToLL_M10to50]#, WW, WZ, ZZ]
 # samples = [Single_mu_2017B, Single_mu_2017C, Single_mu_2017D, Single_mu_2017E, Single_mu_2017F]
 
-production         = True # state whether you're running production mode or not
-isData             = False
-isSignal           = False
-promptLeptonType   = "mu" # choose from 'ele', 'mu'
-L1L2LeptonType     = "mm"  # choose from 'ee', 'mm', 'em'
+try: 
+    mode       = os.environ['FINAL_STATE']
+    isData     = False if os.environ['IS_DATA'] == 'False' else True
+    isSignal   = False if os.environ['IS_SIGNAL'] == 'False' else True
+    production = True
+except KeyError: # for SGE or CONDOR submission enter stuff manually 
+    mode = 'eee'
+    production = False
+    isData     = False
+    isSignal   = False
 
+if (mode[0] != 'e' and mode[0] != 'm') or len(mode) != 3:  raise RuntimeError, 'Mode %s not allowed!' %mode
+if isData == True and isSignal == True:                    raise RuntimeError, 'Cannot have both Signal and Data!'
+
+promptLeptonType   = 'mu' if mode[0] == 'm' else 'ele' # choose from 'ele', 'mu' 
+L1L2LeptonType     = mode[1:]                          # choose from 'ee', 'mm', 'em'
+
+print '\n\tmode: %s, is_data: %s, is_signal: %s, production: %s' % (promptLeptonType[0]+L1L2LeptonType, isData, isSignal, production)
 
 def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isData, isSignal):
     import os
@@ -67,13 +81,13 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
             sample.triggers += ['HLT_Ele35_WPTight_Gsf_v%d'          %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele115_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
             sample.triggers += ['HLT_Ele135_CaloIdVT_GsfTrkIdT_v%d'  %i for i in range(1, 15)] #electron trigger
-            sample.splitFactor = splitFactor(sample, 2e5)
+            sample.splitFactor = splitFactor(sample, 5e5)
     if promptLeptonType == 'mu':
         for sample in samples:
             sample.triggers  = ['HLT_IsoMu24_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_IsoMu27_v%d' %i for i in range(1, 15)] #muon trigger
             sample.triggers += ['HLT_Mu50_v%d'    %i for i in range(1, 15)] #muon trigger
-            sample.splitFactor = splitFactor(sample, 2e5)
+            sample.splitFactor = splitFactor(sample, 5e5)
 
     selectedComponents = samples
 
@@ -429,6 +443,12 @@ def generateKeyConfigs(samples,production, promptLeptonType, L1L2LeptonType, isD
         preprocessor = preprocessor,
         events_class = event_class
     )
+
+    # for CRAB automatic splitting
+    tot_evts = 0
+    for sample in samples: tot_evts += sample.dataset_entries
+    print '\n\ttotal events to be processed:', tot_evts
+    os.environ['TOTAL_EVENTS'] = str(tot_evts)
 
     printComps(config.components, True)
 

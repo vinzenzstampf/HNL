@@ -17,7 +17,8 @@ config.JobType.outputFiles = []
 
 config.section_("Data")
 config.Data.inputDBS = 'global'
-config.Data.splitting = 'Automatic'
+config.Data.splitting = 'EventBased'
+#config.Data.splitting = 'Automatic'
 config.Data.outLFNDirBase = '/store/user/' + os.environ["USER"]
 config.Data.publication = False
 

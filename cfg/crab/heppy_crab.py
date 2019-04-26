@@ -4,8 +4,13 @@ from optparse import OptionParser,OptionGroup
 
 parser = OptionParser()
 
+g0 = OptionGroup(parser,"config options")
+g0.add_option("-m", "--mode", dest="final_state", default="mmm", help="final state configuration to use, ie. mmm")
+g0.add_option("-D", "--data", dest="is_data", action="store_true", help="is data", default=False)
+g0.add_option("-S", "--signal", dest="is_signal", action="store_true", help="is signal", default=False)
+
 g1 = OptionGroup(parser,"Heppy options")
-g1.add_option("-c", "--cfg-file", dest="cfg_file", help="heppy .cfg file to use", default="myHeppyCrabProdDummy")
+g1.add_option("-c", "--cfg-file", dest="cfg_file", help="heppy .cfg file to use", default="test_prod")
 g1.add_option("-o", "--option", dest="extraOptions", type="string", action="append", default=[], help="heppy options to use for task preparation and in remote jobs (the isCrab option is automatically set, can be used in the .cfg to configure it for running on crab)")
 g1.add_option("--AAAconfig", dest="AAAconfig", default="full", help="AAA configuration: full (free AAA access via redirector), local (force reading from local site, will turn AAA and ignoreLocality off), eos (force reading from EOS via AAA)")
 parser.add_option_group(g1)
@@ -13,8 +18,8 @@ parser.add_option_group(g1)
 g2 = OptionGroup(parser,"Stageout options")
 g2.add_option("-s", "--storage-site", dest="storageSite", help="site where the output should be staged out (T2_XX_YYYY)")
 g2.add_option("-d", "--output-dir", dest="outputDir", help="name of the directory where files will be staged out: /store/user/$USER/<output_dir>/<cmg_version>/<production_label>/dataset/$date_$time/0000/foo.bar", default="heppyTrees")
-g2.add_option("-l", "--production-label", dest="production_label", help="heppy_crab production label", default="myHeppyCrabProdDummy")
-g2.add_option("-v", "--cmg-version", dest="cmg_version", help="CMGTools version used", default="myCMGTools-from-CMSSW_X_Y_Z")
+g2.add_option("-l", "--production-label", dest="production_label", help="heppy_crab production label", default="test_prod")
+g2.add_option("-v", "--cmg-version", dest="cmg_version", help="CMGTools version used", default="$CMSSW_BASE")
 g2.add_option("-u", "--unpackFile", dest="filesToUnpack", type="string", action="append", default=[], help="Files to unpack when staging out (relative to output directory)")
 parser.add_option_group(g2)
 g2.add_option("--only-unpacked", dest="only_unpacked", default=True, action="store_true", help="Only return the unpacked files, not the whole compressed output directory")
@@ -41,9 +46,12 @@ optjsonfile = open('options.json','w')
 optjsonfile.write(json.dumps(_heppyGlobalOptions))
 optjsonfile.close()
 
+os.environ["FINAL_STATE"]  = options.final_state
+os.environ["IS_DATA"]      = str(options.is_data)
+os.environ["IS_SIGNAL"]    = str(options.is_signal)
+
 handle = open(options.cfg_file, 'r')
 cfo = imp.load_source(options.cfg_file.split('/')[-1].rstrip(".py"), options.cfg_file, handle)
-cfo = imp.load_source('../hn3l_cfg.py'.split('/')[-1].rstrip(".py"), '../hn3l_cfg.py', handle)
 conf = cfo.config
 handle.close()
 
