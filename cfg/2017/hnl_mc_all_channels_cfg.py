@@ -33,8 +33,9 @@ from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
 from CMGTools.HNL.samples.samples_mc_2017 import TTJets, WJetsToLNu, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
+from CMGTools.HNL.samples.signals_2017 import HN3L_M_4_V_0p00290516780927_e_massiveAndCKM_LO as sample
 
-all_samples = [DYBB]
+all_samples = [sample]
 
 ###################################################
 ###                   OPTIONS                   ###
@@ -70,11 +71,12 @@ samples = all_samples
 testing = True 
 if testing:
     # run on a single component
-    comp = TTJets
+    # comp = TTJets
+    comp = samples[0]
         
     comp.files = comp.files[:1]
     # comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets on lxplus700
-    comp.files = ['/scratch/vstampf/F6E4BBB7-7088-E811-97CB-F01FAFE37F53.root']
+    # comp.files = ['/scratch/vstampf/F6E4BBB7-7088-E811-97CB-F01FAFE37F53.root']
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 
@@ -203,20 +205,21 @@ triggers_and_filters_mu['HLT_Mu50']    = 'hltL3fL1sMu22Or25L1f0L2f10QL3Filtered5
 # These are the minimal requirements that leptons need to satisfy to be considered
 # in building HNL candidates and be saved in the ntuples 
 def preselect_mu(imu):
-    if imu.pt() < 5.             : return False 
-    if abs(imu.eta()) > 2.4      : return False
-    if imu.relIsoFromEA(0.3) > 10: return False
-    if not (imu.isSoftMuon(imu.associatedVertex) or \
-            imu.muonID('POG_ID_Loose')           or \
-            imu.Medium == 1): return False
+    if imu.pt() < 3.              : return False 
+    if abs(imu.eta()) > 2.4       : return False
+    if abs(imu.dxy()) < 0.01      : return False
+    if abs(imu.dz()) > 10         : return False
+    if imu.relIsoFromEA(0.3) > 1.2: return False
+    if not imu.Medium == 1        : return False
     return True
 
 def preselect_ele(iele):
-    if iele.pt() < 5.             : return False 
-    if abs(iele.eta()) > 2.5      : return False
-    if iele.relIsoFromEA(0.3) > 10: return False
-    if not (iele.LooseNoIsoID or \
-            iele.electronID("MVA_ID_nonIso_Fall17_Loose")): return False
+    if iele.pt() < 7.              : return False 
+    if abs(iele.eta()) > 2.5       : return False
+    if abs(iele.dxy()) < 0.01      : return False
+    if abs(iele.dz()) > 10         : return False
+    if iele.relIsoFromEA(0.3) > 1.2: return False
+    if not iele.LooseNoIsoID       : return False
     return True
     
 HNLAnalyzer_mmm = cfg.Analyzer(
@@ -225,7 +228,7 @@ HNLAnalyzer_mmm = cfg.Analyzer(
     promptLepton        = 'm',
     L1L2LeptonType      = 'mm',
     triggersAndFilters  = triggers_and_filters_mu,
-    candidate_selection = 'maxpt',
+    candidate_selection = 'minmass',
     muon_preselection   = preselect_mu,
     ele_preselection    = preselect_ele,
 )
@@ -236,7 +239,7 @@ HNLAnalyzer_eee = cfg.Analyzer(
     promptLepton        = 'e',
     L1L2LeptonType      = 'ee',
     triggersAndFilters  = triggers_and_filters_ele,
-    candidate_selection = 'maxpt',
+    candidate_selection = 'minmass',
     muon_preselection   = preselect_mu,
     ele_preselection    = preselect_ele,
 )
@@ -247,7 +250,7 @@ HNLAnalyzer_eem = cfg.Analyzer(
     promptLepton        = 'e',
     L1L2LeptonType      = 'em',
     triggersAndFilters  = triggers_and_filters_ele,
-    candidate_selection = 'maxpt',
+    candidate_selection = 'minmass',
     muon_preselection   = preselect_mu,
     ele_preselection    = preselect_ele,
 )
@@ -258,7 +261,7 @@ HNLAnalyzer_mem = cfg.Analyzer(
     promptLepton        = 'm',
     L1L2LeptonType      = 'em',
     triggersAndFilters  = triggers_and_filters_mu,
-    candidate_selection = 'maxpt',
+    candidate_selection = 'minmass',
     muon_preselection   = preselect_mu,
     ele_preselection    = preselect_ele,
 )
@@ -272,7 +275,8 @@ HNLEventFilter = cfg.Analyzer(
 ##########################################################################################
 # ONE TREE PRODUCER PER FINAL STATE FIXME! ADD THE EXTENDED PRODUCER
 ##########################################################################################
-skimFilter = 'the_3lep_cand.charge12()==0 and the_3lep_cand.mass12()<12 and recoSv.disp2DFromBS_cos>0.'
+# skimFilter = 'the_3lep_cand.charge12()==0 and the_3lep_cand.mass12()<12 and recoSv.disp2DFromBS_cos>0.'
+skimFilter = '1==1'
 
 HNLTreeProducerBase_mmm = cfg.Analyzer(
     HNLTreeProducerBase,

@@ -83,7 +83,7 @@ class HNLAnalyzer(Analyzer):
         # passed
         return True
     
-    def preselectPromptElectrons(self, ele, pt=30, eta=2.5, dxy=0.05, dz=0.2):
+    def preselectPromptElectrons(self, ele, pt=38, eta=2.5, dxy=0.05, dz=0.1):
         # kinematics
         if not self.testLepKin(ele, pt, eta): return False
         # id
@@ -93,11 +93,13 @@ class HNLAnalyzer(Analyzer):
         # passed
         return True
 
-    def preselectPromptMuons(self, mu, pt=25, eta=2.4, dxy=0.05, dz=0.2):
+    def preselectPromptMuons(self, mu, pt=28, eta=2.4, dxy=0.05, dz=0.1):
         # kinematics
         if not self.testLepKin(mu, pt, eta): return False
         # id
-        if not mu.looseId(): return False
+        if not mu.muonID('POG_ID_Medium'): return False
+        # 3DIPSig
+        if mu.sip3D > 4: return False
         # vertex
         if not self.testLepVtx(mu, dxy, dz): return False
         # passed
@@ -168,7 +170,7 @@ class HNLAnalyzer(Analyzer):
             leptons = electrons + muons
 
         dileptons = combinations(leptons, 2)
-        dileptons = [(lep1, lep2) for lep1, lep2 in dileptons if deltaR(lep1, lep2)>0.01]
+        # dileptons = [(lep1, lep2) for lep1, lep2 in dileptons if deltaR(lep1, lep2)>0.01]
 
         if self.cfg_ana.L1L2LeptonType == 'em':
             dileptons = [(lep1, lep2) for lep1, lep2 in dileptons if abs(lep1.pdgId()) + abs(lep2.pdgId()) == 24]
@@ -195,7 +197,7 @@ class HNLAnalyzer(Analyzer):
         if which_candidate == 'maxdls2dpv' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp2DFromPVSignificance()    ), reverse=False)[0]
         if which_candidate == 'maxdls3dpv' : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.disp3DFromPVSignificance()    ), reverse=False)[0]
         if which_candidate == 'maxcos'     : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.cosTransversePointingAngleBS()), reverse=False)[0]
-        if which_candidate == 'maxpt'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
+        # if which_candidate == 'maxpt'      : return sorted(dileptonsvtx, key = lambda x : (x.isSS(), -x.pt()                          ), reverse=False)[0]
 
         
     def process(self, event):
