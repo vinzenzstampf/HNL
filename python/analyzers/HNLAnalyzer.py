@@ -82,6 +82,16 @@ class HNLAnalyzer(Analyzer):
         if abs(lep.dxy())>dxy: return False
         # passed
         return True
+
+    def clean_electrons(self, ele, muons):
+ 
+        muons = [imu for imu in muons if imu.muonID('POG_ID_Loose')]
+
+        for imu in muons:
+            assert imu.muonID('POG_ID_LOOSE'), 'iMu NOT LOOSE'
+            if deltaR(ele, imu) < 0.05: return False
+
+        return True
     
     def preselectPromptElectrons(self, ele, pt=38, eta=2.5, dxy=0.05, dz=0.1):
         # kinematics
@@ -258,8 +268,9 @@ class HNLAnalyzer(Analyzer):
         #####################################################################################
         # filter for events with at least 3 leptons in proper flavor combination
         #####################################################################################
+        # event.electrons = [iele for iele in event.electrons if self.cfg_ana.ele_preselection(iele)]
+        event.electrons = [iele for iele in event.electrons if self.cfg_ana.ele_preselection(iele) and clean_electrons(iele, event.muons)] # electron cleaning
         event.muons     = [imu  for imu  in event.muons     if self.cfg_ana.muon_preselection(imu)]
-        event.electrons = [iele for iele in event.electrons if self.cfg_ana.ele_preselection(iele)]
 
         if not self.checkLeptonFlavors(event.electrons, event.muons):
             return return_statement
