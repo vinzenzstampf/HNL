@@ -33,7 +33,7 @@ from CMGTools.HNL.analyzers.EventFilter         import EventFilter
 from pdb import set_trace
 
 from CMGTools.HNL.samples.samples_mc_2017 import TTJets, WJetsToLNu, DYBB, DYJetsToLL_M10to50, DYJetsToLL_M50, DYJetsToLL_M50_ext, WW, WZ, ZZ 
-from CMGTools.HNL.samples.signals_2017 import HN3L_M_4_V_0p00290516780927_e_massiveAndCKM_LO as sample
+from CMGTools.HNL.samples.signals_2017 import HN3L_M_4_V_0p00290516780927_mu_massiveAndCKM_LO as sample
 
 all_samples = [sample]
 
@@ -76,7 +76,7 @@ if testing:
         
     comp.files = comp.files[:1]
     # comp.files = ['/tmp/manzoni/001784E5-D649-734B-A5FF-E151DA54CC02.root'] # one file from TTJets on lxplus700
-    # comp.files = ['/scratch/vstampf/F6E4BBB7-7088-E811-97CB-F01FAFE37F53.root']
+    comp.files = ['/work/vstampf/heavyNeutrino_1.root']
     # comp.fineSplitFactor = 10 # fine splitting, multicore
     samples = [comp]
 
